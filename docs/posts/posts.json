@@ -1,5 +1,27 @@
 [
   {
+    "path": "posts/2021-09-01-second-coming/",
+    "title": "Second Coming of Jesus Christ",
+    "description": "The usage of the phrase \"second coming\" in the scriptures",
+    "author": [
+      {
+        "name": "Bryan Whiting",
+        "url": "https://www.bryanwhiting.com"
+      }
+    ],
+    "date": "2021-09-01",
+    "categories": [
+      "general conference",
+      "scriptures",
+      "second coming",
+      "jesus christ"
+    ],
+    "contents": "\n\n\n\nHow often is second coming mentioned?\nThe exact phrase “second coming” is only mentioned once in all of the scriptures:\n\n\nTo lift up your voice as with the sound of a trump, both long and loud, and cry repentance unto a crooked and perverse generation, preparing the way of the Lord for his second coming.(D&C 34:6)\n\n\nYet this verse is mentioned often in General Conference:\n\n\n\nIt was mentioned a lot in the mid 70’s, but seems to be picking back up again.\n\n\n\n",
+    "preview": "posts/2021-09-01-second-coming/second-coming_files/figure-html5/unnamed-chunk-3-1.png",
+    "last_modified": "2021-09-01T19:10:07+00:00",
+    "input_file": {}
+  },
+  {
     "path": "posts/welcome/",
     "title": "Welcome to Gospel Analysis",
     "description": "Welcome to our new blog, Gospel Analysis. We hope you enjoy \nreading what we have to say!",
@@ -23,14 +45,17 @@
     "author": [
       {
         "name": "Bryan Whiting",
-        "url": {}
+        "url": "https://www.bryanwhiting.com"
       }
     ],
     "date": "2021-08-31",
-    "categories": [],
+    "categories": [
+      "general conference",
+      "covenant"
+    ],
     "contents": "\n\n\n\nThe phrase covenant path has first appeared in general conference in 2007.\n\n\n“… The promptings of the Holy Ghost will always be sufficient for our needs if we keep to the covenant path. Our path is uphill most days, but the help we receive for the climb is literally divine. We have three members of the Godhead—the Father, the Son, and the Holy Ghost—helping us because of the covenants we have made.\n\n\nElaine S. Dalton, First Counselor in the Young Women General Presidency Stay on the Path, Apr 2007\n\n\nThe phrase gained momentum in 2013-2017 but took off in October 2018.\n\n\n\nThen Elder Russel M. Nelson mentioned the phrase in a 2015 talk:\n\n\nToday, let me add that we need women who know how to make important things happen by their faith and who are courageous defenders of morality and families in a sin-sick world. We need women who are devoted to shepherding God’s children along the covenant path toward exaltation; women who know how to receive personal revelation, who understand the power and peace of the temple endowment; women who know how to call upon the powers of heaven to protect and strengthen children and families; women who teach fearlessly.\n\n\nBy President Russell M. Nelson, President of the Quorum of the Twelve Apostles A Plea to My Sisters, Oct 2015\n\n\nAnd again in 2017:\n\n\nWe also increase the Savior’s power in our lives when we make sacred covenants and keep those covenants with precision. Our covenants bind us to Him and give us godly power. As faithful disciples, we repent and follow Him into the waters of baptism. We walk along the covenant path to receive other essential ordinances.\n\n\nBy President Russell M. Nelson Drawing the Power of Jesus Christ into Our Lives, Apr 2017\n\n\nBut it didn’t really take of until October 2018 when it was mentioned 24 times. What spurned this growth?\nPresident Nelson became prophet January 14, 2018. In his first message to the members of the church on Jan 16, 2018 (recorded in the Ensign, Apr 2018), he mentioned covenant path four times:\n\nNow, to each member of the Church I say, keep on the covenant path. Your commitment to follow the Savior by making covenants with Him and then keeping those covenants will open the door to every spiritual blessing and privilege available to men, women, and children everywhere.\n\n\nYour worship in the temple and your service there for your ancestors will bless you with increased personal revelation and peace and will fortify your commitment to stay on the covenant path.\n\n\nNow, if you have stepped off the path, may I invite you with all the hope in my heart to please come back. Whatever your concerns, whatever your challenges, there is a place for you in this, the Lord’s Church. You and generations yet unborn will be blessed by your actions now to return to the covenant path.\n\n(The fourth mention was in a section titled “Stay on the Covenant Path”.)\n\n\n\n",
     "preview": "posts/2021-09-01-covenant-path/covenant-path_files/figure-html5/unnamed-chunk-3-1.png",
-    "last_modified": "2021-09-01T06:07:31+00:00",
-    "input_file": "covenant-path.knit.md"
+    "last_modified": "2021-09-01T18:53:02+00:00",
+    "input_file": {}
   }
 ]

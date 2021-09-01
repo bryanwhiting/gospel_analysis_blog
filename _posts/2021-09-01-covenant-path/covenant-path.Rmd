@@ -4,22 +4,27 @@ description: |
   Where did this phrase come from, and why is it so important?
 author:
   - name: Bryan Whiting
+    url: https://www.bryanwhiting.com
 date: 08-31-2021
 output:
   distill::distill_article:
     self_contained: false
+categories:
+  - general conference
+  - covenant
 ---
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(
+  echo = FALSE
+  )
 ```
 
 
 ```{r}
 library(generalconference)
 library(dplyr)
-library(tidytext)
 library(ggplot2)
 source("/home/rstudio/gospel_analysis_blog/_posts/ggtheme.R")
 source("/home/rstudio/gospel_analysis_blog/_posts/utils.R")
@@ -70,7 +75,7 @@ Then Elder Russel M. Nelson mentioned the phrase in a 2015 talk:
 df_p %>%
   filter(str_detect(author1, "Nelson")) %>%
   filter(date == "2015-10-01") %>%
-  quote_paragraph()
+  quote_paragraph("covenant path")
 ```
 
 And again in 2017:
@@ -79,7 +84,7 @@ And again in 2017:
 df_p %>%
   filter(str_detect(author1, "Nelson")) %>%
   filter(date == "2017-04-01") %>%
-  quote_paragraph()
+  quote_paragraph("covenant path")
 ```
 
 But it didn't really take of until October 2018 when it was mentioned 24 times. What spurned this growth?
