@@ -1,0 +1,95 @@
+---
+title: "Covenant Path"
+description: |
+  Where did this phrase come from, and why is it so important?
+author:
+  - name: Bryan Whiting
+date: 08-31-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r}
+library(generalconference)
+library(dplyr)
+library(tidytext)
+library(ggplot2)
+source("/home/rstudio/gospel_analysis_blog/_posts/ggtheme.R")
+source("/home/rstudio/gospel_analysis_blog/_posts/utils.R")
+
+colors = palette_pander(10)
+# extrafont::loadfonts() ## to load the font
+options(max.print=1000)
+data("genconf")
+df <- genconf
+```
+
+The phrase `covenant path` has first appeared in general conference in 2007.
+
+```{r, results="asis"}
+df_p <- df %>%
+  unnest(sessions) %>%
+  unnest(talks) %>%
+  unnest(paragraphs) %>% 
+  select(date, title1, author1, url, paragraph, p_id) %>%
+  filter(str_detect(paragraph, 'covenant path')) %>%
+  mutate(deep_link = glue("{url}.{p_id}"))
+
+df_p %>%
+  arrange(date) %>%
+  head(1) %>%
+  quote_paragraph("covenant path")
+```
+
+The phrase gained momentum in 2013-2017 but took off in October 2018.
+
+```{r}
+cnt <- df_p %>%
+  count(date) 
+# View(cnt)
+cnt %>%
+  ggplot(aes(x = date, y = n)) +
+  geom_bar(stat='identity', fill=colors[1]) +
+  labs(
+    title = 'Number of References to "Covenant Path"',
+    y = ''
+  ) + 
+  theme_ga
+```
+
+Then Elder Russel M. Nelson mentioned the phrase in a 2015 talk:
+
+```{r, results="asis"}
+df_p %>%
+  filter(str_detect(author1, "Nelson")) %>%
+  filter(date == "2015-10-01") %>%
+  quote_paragraph()
+```
+
+And again in 2017:
+
+```{r, results="asis"}
+df_p %>%
+  filter(str_detect(author1, "Nelson")) %>%
+  filter(date == "2017-04-01") %>%
+  quote_paragraph()
+```
+
+But it didn't really take of until October 2018 when it was mentioned 24 times. What spurned this growth?
+
+President Nelson became prophet January 14, 2018. In his first message to the members of the church on Jan 16, 2018 (recorded in the [Ensign, Apr 2018](https://www.churchofjesuschrist.org/study/ensign/2018/04/as-we-go-forward-together?lang=eng&ab=v00)), he mentioned `covenant path` four times:
+
+> Now, to each member of the Church I say, **keep on the covenant path**. Your commitment to follow the Savior by making covenants with Him and then keeping those covenants will open the door to every spiritual blessing and privilege available to men, women, and children everywhere.
+
+> Your worship in the temple and your service there for your ancestors will bless you with increased personal revelation and peace and will fortify your commitment to stay on the **covenant path**.
+
+> Now, if you have stepped off the path, may I invite you with all the hope in my heart to please come back. Whatever your concerns, whatever your challenges, there is a place for you in this, the Lord’s Church. You and generations yet unborn will be blessed by your actions now to return to the **covenant path**. 
+
+(The fourth mention was in a section titled "Stay on the Covenant Path".)
