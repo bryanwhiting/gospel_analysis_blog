@@ -7,7 +7,7 @@ description: |
 author:
   - name: Bryan Whiting
     url: https://www.bryanwhiting.com
-date: 09-01-2021
+date: 09-03-2021
 output:
   distill::distill_article:
     self_contained: false
@@ -138,7 +138,10 @@ dfg %>%
   datatable_quotes(n = 20, c('hear Him', 'hear him', 'Hear Him'))
 ```
 
-## Hear Him
+## "Hear Him" is Trending in Conference
+
+This phrase has recently spiked.
+
 
 ```{r}
 cnt <- dfg %>%
@@ -165,3 +168,6 @@ cnt %>%
     y = ""
   )
 ```
+
+So, how will you prepare for His second coming? Perhaps a good place to start
+is to practice [hearing Him](https://www.churchofjesuschrist.org/study/general-conference/2020/04/45nelson?lang=eng.)
