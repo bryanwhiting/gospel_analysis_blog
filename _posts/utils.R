@@ -38,10 +38,24 @@ quote_verse <- function(df, phrase = "xxxx") {
 }
 
 
-datatable_quotes <- function(df, n = 20) {
-  df %>%
+datatable_quotes <- function(df, n = 20, phrases="xxxx") {
+
+  df <- df %>%
     head(n) %>%
-    select(pquote) %>%
+    select(pquote)
+
+  # could have multiple phrases: hear Him, Hear Him, hear him
+  for (p in phrases){
+    df <- df %>%
+    mutate(
+      pquote = str_replace(
+        pquote,
+        p,
+        glue('<strong style="color:{colors[1]}">{p}</strong>')
+      )
+    )
+  }
+  df %>%
     datatable(
       class = "compact hover",
       extensions = c("Scroller", "Responsive"),

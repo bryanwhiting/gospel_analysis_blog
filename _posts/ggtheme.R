@@ -1,7 +1,8 @@
 library(ggplot2)
 library(ggthemes)
 library(scales)
-library(extrafont)
+library(testthat)
+# library(extrafont)
 
 theme_ga_raw = function() {
   bg_color = rgb(245, 245, 245, maxColorValue = 255)
@@ -13,9 +14,35 @@ theme_ga_raw = function() {
       legend.background = element_rect(fill=bg_color, colour=NA),
       panel.border = element_blank(),
       axis.ticks = element_blank(),
-      axis.title.x = element_blank()
+      axis.title.x = element_blank(),
+      # markdown
+      plot.title = ggtext::element_markdown(),
+      plot.subtitle = ggtext::element_markdown()
     )
 }
+
+custom_title <- function(lst){
+  out <- ""
+  for(i in lst){
+    if (length(i) == 2){
+      span <- tags$span(i[1], style=glue("color:{i[2]};"))
+      out <- paste(out, span)
+    } else {
+      out <- paste(out, i)
+    }
+  }
+  out
+}
+# test_that('custom_title() works',{
+#   subtitle = list(
+#     c("Recent trend", colors[2]),
+#     'of',
+#     c('references to second coming.', colors[1])
+#   )
+#   ans <- custom_title(subtitle)
+#   exp <- " <span style=\"color:#009E73;\">Recent trend</span> of <span style=\"color:#56B4E9;\">references to second coming.</span>"
+#   expect_equal(ans, exp)
+# })
 
 # Main theme
 theme_ga = list(

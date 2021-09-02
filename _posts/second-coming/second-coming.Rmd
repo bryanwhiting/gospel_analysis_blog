@@ -1,0 +1,167 @@
+---
+title: "Second Coming of Jesus Christ"
+description: |
+  While the phrase "second coming" isn't used often in the scriptures,
+  other phrases are. Interestingly, there's a spike in the invitation 
+  to "hear Him", perhaps commonly seen on social media as #hearhim.
+author:
+  - name: Bryan Whiting
+    url: https://www.bryanwhiting.com
+date: 09-01-2021
+output:
+  distill::distill_article:
+    self_contained: false
+categories:
+   - general conference
+   - scriptures
+   - second coming
+   - jesus christ
+   - hear him
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+
+```{r}
+library(generalconference)
+library(scriptuRs)
+library(dplyr)
+library(tidytext)
+library(ggplot2)
+# library(rmarkdown)
+library(DT)
+library(htmltools)
+source("/home/rstudio/gospel_analysis_blog/_posts/ggtheme.R")
+source("/home/rstudio/gospel_analysis_blog/_posts/utils.R")
+
+colors <- palette_pander(10)
+# extrafont::loadfonts() ## to load the font
+options(max.print = 1000)
+data("genconf")
+dfg <- genconf %>%
+  unnest(sessions) %>%
+  unnest(talks) %>%
+  unnest(paragraphs) %>%
+  mutate(
+    paragraph2 = tolower(paragraph),
+    date_str = date %>% format("%b %Y"),
+    deep_link = glue("{url}.{p_id}?lang=eng#{p_id}"),
+    p_href = glue('{author1} <a href="{deep_link}">{title1}</a>, {date_str}'),
+    pquote = glue("{paragraph}<br>{p_href}")
+  )
+
+dfs <- lds_scriptures() %>%
+  mutate(text2 = tolower(text))
+```
+
+Disciples of Christ eagerly await His return to the earth, commonly known as the "Second Coming". But where does this phrase come from, and how is it being used today?
+
+## Usage of "Second Coming" in Text
+
+The exact phrase "second coming" is only mentioned once in all of the scriptures:
+
+```{r, results="asis"}
+dfs %>%
+  filter(str_detect(text2, "second coming")) %>%
+  quote_verse("second coming")
+```
+
+Yet the phrase is mentioned often in General Conference. It was mentioned a lot in the mid 70's, but seems to be picking back up again.
+
+```{r}
+cnt <- dfg %>%
+  filter(str_detect(paragraph2, "second coming")) %>%
+  count(year)
+# View(cnt)
+cnt %>%
+  ggplot(aes(x = year, y = n)) +
+  geom_bar(stat = "identity", fill = colors[1]) +
+  labs(
+    title = 'Number of References to "Second Coming" By Year',
+    subtitle = custom_title(
+      list(
+        c("Recent trend", colors[2]),
+        "of",
+        c("references to **second coming**", colors[1])
+      )
+    ),
+    y = ""
+  ) +
+  geom_smooth(se = F, color = colors[2]) +
+  theme_ga
+```
+
+
+
+## Other Mentions of "Second Coming"
+
+Turns out that the authors in the Scriptures just referred to the Savior's
+Second Coming in a different way. Looking at the 
+[Gospel Topics: Second Coming](https://www.churchofjesuschrist.org/study/manual/gospel-topics/second-coming-of-jesus-christ?lang=eng), 
+[Topical Guide: Jesus Christ, Second Coming](https://www.churchofjesuschrist.org/study/scriptures/tg/jesus-christ-second-coming?lang=eng), and the 
+[Index to the Triple Combination: Jesus Christ, Second Coming of](https://www.churchofjesuschrist.org/study/scriptures/triple-index/jesus-christ-second-coming-of?lang=eng), there are a few other phrases used to refer to His coming.
+
+> They that are wise and have received the truth, and have taken the Holy Spirit for their guide, and have not been deceived—verily I say unto you, they shall not be hewn down and cast into the fire, but shall abide the day....For the **Lord shall be in their midst**, and his glory shall be upon them, and he will be their king and their lawgiver. [D&C 45:57-59](https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/45.57-59?lang=eng#p57)
+
+> The hour and the day no man knoweth, neither the angels in heaven, nor shall they know until **he comes**. [D&C 49:7](https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/49.7?lang=eng#p7).
+
+> King of glory **shall come**... [Ps 24:7](https://www.churchofjesuschrist.org/study/scriptures/ot/ps/24.7?lang=eng#p7)
+
+> they that are Christ’s **at his coming**... [1 Cor 15:23](https://www.churchofjesuschrist.org/study/scriptures/nt/1-cor/15.23?lang=eng#p23)
+
+If we use these and phrases to search for His coming, we'd see a lot more 
+references.
+
+## Preparing for His Coming by Hearing Him
+
+The Lord teaches us that those who are prepared for His coming "have taken the Holy Spirit for their guide" ([D&C 45:57-59](https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/45.57-59?lang=eng#p57)) and warns that those
+"that will not hear my voice, the same shall ye not receive into my church, for [those] I will not receive at the last day."
+([Mosiah 26:28](https://www.churchofjesuschrist.org/study/scriptures/bofm/mosiah/26?lang=eng)). 
+
+<aside>
+I don't see this phrase "ye not receive" as exclusive, as if the followers of Christ
+are better than non-followers. But I see it as a qualification for baptism, i.e., reception into His church. Individuals need to demonstrate they've "are willing to take upon them the name of Jesus Christ," ([D&C 20:37](https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/20.p37?lang=eng#p36)), among other things.
+</aside>
+
+We can see the 20 most recent references to "Hear Him":
+
+```{r, layout="l-body-outset"}
+dfg %>%
+  filter(str_detect(paragraph2, "hear him")) %>%
+  datatable_quotes(n = 20, c('hear Him', 'hear him', 'Hear Him'))
+```
+
+## Hear Him
+
+```{r}
+cnt <- dfg %>%
+  filter(str_detect(paragraph2, "hear him")) %>%
+  group_by(year) %>%
+  count()
+
+# View(cnt)
+cnt %>%
+  ggplot(aes(x = year, y = n)) +
+  geom_bar(stat = "identity", fill = colors[1]) +
+  # scale_y_continuous(limits = c(0, 30), breaks = seq(0, 30, by=5))
+  geom_smooth(se = F, color = colors[2]) +
+  theme_ga + 
+  labs(
+    title = "There were 28 prophetic invitations to **Hear Him** in 2020",
+    subtitle = custom_title(list(
+      c("Recent trend", colors[2]),
+      "of",
+      c("calls to **hear him**", colors[1]),
+      "by year"
+    )),
+    caption = "*2021 is only halfway over\ngospelanalysis.com",
+    y = ""
+  )
+```
