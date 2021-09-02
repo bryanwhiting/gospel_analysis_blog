@@ -58,7 +58,8 @@ datatable_quotes <- function(df, n = 20, phrases="xxxx") {
   df %>%
     datatable(
       class = "compact hover",
-      extensions = c("Scroller", "Responsive"),
+      # extensions = c("Scroller", "Responsive"),
+      extensions = c("Scroller"),
       escape = F,
       caption = htmltools::tags$caption(
         style = "caption-side: bottom; text-align: center;",
@@ -67,10 +68,12 @@ datatable_quotes <- function(df, n = 20, phrases="xxxx") {
       ),
       colnames = c("QUOTES"),
       options = list(
-        dom = "st",
+        dom = "ft",
         # deferRender = TRUE,
-        scrollY = 250,
-        scroller = TRUE,
+        pageLength = n,
+        scrollY = 200,
+        scrollX = FALSE,
+        # scroller = TRUE,
         columnDefts = list(
           list(orderDAta = 0, targets = 1),
           list(visible = FALSE, targets = 0),
