@@ -36,3 +36,45 @@ quote_verse <- function(df, phrase = "xxxx") {
   msg <- glue("\n\n> {text}({source}) \n\n")
   cat(msg)
 }
+
+
+datatable_quotes <- function(df, n = 20) {
+  df %>%
+    head(n) %>%
+    select(pquote) %>%
+    datatable(
+      class = "compact hover",
+      extensions = c("Scroller", "Responsive"),
+      escape = F,
+      caption = htmltools::tags$caption(
+        style = "caption-side: bottom; text-align: center;",
+        "Source: ",
+        withTags(div(HTML('<a href="https://www.churchofjesuschrist.org">ChurchOfJesusChrist.org</a>')))
+      ),
+      colnames = c("QUOTES"),
+      options = list(
+        dom = "st",
+        # deferRender = TRUE,
+        scrollY = 250,
+        scroller = TRUE,
+        columnDefts = list(
+          list(orderDAta = 0, targets = 1),
+          list(visible = FALSE, targets = 0),
+          list(className = "dt-head-left", targets = 1)
+        )
+        # font style: https://stackoverflow.com/a/53658138
+        # initComplete = JS(
+          # "function(settings, json) {",
+          # "$(this.api().table().header()).css({'font-size': '12px', 'background-color': '#56B4E9', 'color': '#fff'});",
+          # "}"
+        # )
+      )
+    ) %>%
+    # TODO: improve style
+    # formatStyle(1, fontFamily="IBM Plex Sans")
+    # formatStyle(1, fontFamily="Roboto Mono")
+    formatStyle(
+      columns = colnames(.$x$data),
+      fontFamily = "Times New Roman",
+      `font-size` = "14px")
+}

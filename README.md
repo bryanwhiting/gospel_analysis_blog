@@ -9,3 +9,12 @@ categories:
   - scriptures 
   - general conference
 ```
+
+## rmarkdown
+
+Creating panels:
+github.com/mfherman/westchester-covid/blob/master/site/county.Rmd
+
+```
+xaringanExtra::use_panelset()
+```
