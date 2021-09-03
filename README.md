@@ -1,6 +1,6 @@
 # README.md
 
-Site: www.gospelanalysis.com (a re-direct of https://bryanwhiting.github.io/general_conference_blog).
+Site: www.gospelanalysis.com (a re-direct of https://bryanwhiting.github.io/gospel_analysis_blog).
 
 ## workflow:
 
