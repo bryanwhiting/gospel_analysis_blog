@@ -2,7 +2,9 @@ name: "gospel_analysis_blog"
 title: "Gospel Analysis"
 description: |
   Gospel Analysis
+google_analytics: "UA-206703936-2"
 output_dir: "docs"
+base_url: https://www.gospelanalysis.com
 theme: theme.css
 navbar:
   right:

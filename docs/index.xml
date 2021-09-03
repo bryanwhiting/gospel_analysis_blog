@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Gospel Analysis</title>
+    <link>https://www.gospelanalysis.com</link>
+    <atom:link href="https://www.gospelanalysis.com/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Gospel Analysis
+</description>
+    <generator>Distill</generator>
+    <lastBuildDate>Fri, 03 Sep 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Second Coming of Jesus Christ</title>
+      <dc:creator>Bryan Whiting</dc:creator>
+      <link>https://www.gospelanalysis.com/posts/second-coming</link>
+      <description>While the phrase "second coming" isn't used often in the scriptures,
+other phrases are. Interestingly, there's a spike in the invitation 
+to "hear Him", perhaps commonly seen on social media as #hearhim.</description>
+      <category>general conference</category>
+      <category>scriptures</category>
+      <category>second coming</category>
+      <category>jesus christ</category>
+      <category>hear him</category>
+      <guid>https://www.gospelanalysis.com/posts/second-coming</guid>
+      <pubDate>Fri, 03 Sep 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://www.gospelanalysis.com/posts/second-coming/second-coming_files/figure-html5/unnamed-chunk-3-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+    <item>
+      <title>Covenant Path</title>
+      <dc:creator>Bryan Whiting</dc:creator>
+      <link>https://www.gospelanalysis.com/posts/covenant-path</link>
+      <description>Where did this phrase come from, and why is it so important?</description>
+      <category>general conference</category>
+      <category>covenant</category>
+      <guid>https://www.gospelanalysis.com/posts/covenant-path</guid>
+      <pubDate>Tue, 31 Aug 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://www.gospelanalysis.com/posts/covenant-path/covenant-path_files/figure-html5/unnamed-chunk-3-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+  </channel>
+</rss>

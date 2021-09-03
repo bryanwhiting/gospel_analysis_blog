@@ -75,6 +75,9 @@ d-appendix {
 
 /*-- Additional custom styles --*/
 /* Add any additional CSS rules below                      */
+.strong {
+  color: #56B4E9;
+}
 
 .byline {
   /*grid-auto-flow: column;*/

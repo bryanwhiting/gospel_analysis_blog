@@ -6,14 +6,14 @@
       "description": "Some additional details about the blog",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-09-03T05:33:28+00:00"
+      "last_modified": "2021-09-03T20:49:48+00:00"
     },
     {
       "path": "index.html",
       "title": "Gospel Analysis",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-09-03T05:33:29+00:00"
+      "last_modified": "2021-09-03T20:49:50+00:00"
     }
   ],
   "collections": ["posts/posts.json"]
