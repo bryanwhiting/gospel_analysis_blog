@@ -12,6 +12,7 @@ output:
 categories:
   - general conference
   - covenant
+  - word trends
 ---
 
 

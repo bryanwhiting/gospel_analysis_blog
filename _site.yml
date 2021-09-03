@@ -3,6 +3,7 @@ title: "Gospel Analysis"
 description: |
   Gospel Analysis
 output_dir: "docs"
+theme: theme.css
 navbar:
   right:
     - text: "Home"
