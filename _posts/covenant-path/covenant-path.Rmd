@@ -37,7 +37,7 @@ data("genconf")
 df <- genconf
 ```
 
-The phrase `covenant path` has first appeared in general conference in 2007.
+The phrase **covenant path** has first appeared in general conference in 2007.
 
 ```{r, results="asis"}
 df_p <- df %>%
@@ -90,7 +90,7 @@ df_p %>%
 
 But it didn't really take of until October 2018 when it was mentioned 24 times. What spurned this growth?
 
-President Nelson became prophet January 14, 2018. In his first message to the members of the church on Jan 16, 2018 (recorded in the [Ensign, Apr 2018](https://www.churchofjesuschrist.org/study/ensign/2018/04/as-we-go-forward-together?lang=eng&ab=v00)), he mentioned `covenant path` four times:
+President Nelson became prophet January 14, 2018. In his first message to the members of the church on Jan 16, 2018 (recorded in the [Ensign, Apr 2018](https://www.churchofjesuschrist.org/study/ensign/2018/04/as-we-go-forward-together?lang=eng&ab=v00)), he mentioned **covenant path** four times:
 
 > Now, to each member of the Church I say, **keep on the covenant path**. Your commitment to follow the Savior by making covenants with Him and then keeping those covenants will open the door to every spiritual blessing and privilege available to men, women, and children everywhere.
 

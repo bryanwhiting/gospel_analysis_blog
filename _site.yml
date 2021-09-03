@@ -1,7 +1,8 @@
 name: "gospel_analysis_blog"
 title: "Gospel Analysis"
 description: |
-  Gospel Analysis
+  A study of the Gospel of Jesus Christ as taught through the scriptures
+  and General Conference talks.
 google_analytics: "UA-206703936-1"
 output_dir: "docs"
 base_url: https://www.gospelanalysis.com

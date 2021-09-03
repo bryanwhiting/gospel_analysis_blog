@@ -124,13 +124,12 @@ references.
 
 The Lord teaches us that those who are prepared for His coming "have taken the Holy Spirit for their guide" ([D&C 45:57-59](https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/45.57-59?lang=eng#p57)) and warns that those
 "that will not hear my voice, the same shall ye not receive into my church, for [those] I will not receive at the last day."
-([Mosiah 26:28](https://www.churchofjesuschrist.org/study/scriptures/bofm/mosiah/26?lang=eng)). 
+([Mosiah 26:28](https://www.churchofjesuschrist.org/study/scriptures/bofm/mosiah/26?lang=eng))
 
-<aside>
-I don't see this phrase "ye not receive" as exclusive, as if the followers of Christ
-are better than non-followers. But I see it as a qualification for baptism, i.e., reception into His church. Individuals need to demonstrate they've "are willing to take upon them the name of Jesus Christ," ([D&C 20:37](https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/20.p37?lang=eng#p36)), among other things.
-</aside>
+This phrase "ye not receive" is not exclusive (as if the followers of Christ
+are better than non-followers) because Christ "inviteth them all to come unto him and partake of his goodness" (2 Ne. 26:33). It's a qualification for baptism, i.e., reception into His church. Individuals need to demonstrate they've "are willing to take upon them the name of Jesus Christ" ([D&C 20:37](https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/20.p37?lang=eng#p36)), and follow him. 
 
+The calls to "Hear Him" are abundant in General Conference talks. Here are 20
 We can see the 20 most recent references to "Hear Him":
 
 ```{r, layout="l-body-outset"}
@@ -171,4 +170,4 @@ cnt %>%
 ```
 
 So, how will you prepare for His second coming? Perhaps a good place to start
-is to practice [hearing Him](https://www.churchofjesuschrist.org/study/general-conference/2020/04/45nelson?lang=eng.)
+is to practice [hearing Him](https://www.churchofjesuschrist.org/study/general-conference/2020/04/45nelson?lang=eng.).
