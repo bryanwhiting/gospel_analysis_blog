@@ -1,0 +1,2 @@
+# This file is intentionally useless. I moved my .Renviron to .gitignore
+AIRTABLE_API_KEY=xxxxx
