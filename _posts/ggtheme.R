@@ -5,7 +5,8 @@ library(testthat)
 # library(extrafont)
 
 theme_ga_raw = function() {
-  bg_color = rgb(245, 245, 245, maxColorValue = 255)
+  # bg_color = rgb(245, 245, 245, maxColorValue = 255)
+  bg_color = "white"
 
   theme_bw(base_size=12, base_family="Avenir") + #%+replace%
     theme(
