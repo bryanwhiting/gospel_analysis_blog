@@ -1,7 +1,7 @@
 ---
 title: "The Names of Christ"
 description: |
-  A short description of the post.
+  Christ is called by at least 100 names in the scriptures.
 author:
   - name: Bryan Whiting
     url: https://www.bryanwhiting.com
@@ -21,7 +21,7 @@ categories:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r}
+```{r load}
 library(generalconference)
 library(scriptuRs)
 library(dplyr)
@@ -29,8 +29,9 @@ library(gt)
 library(tidytext)
 library(ggplot2)
 library(instaquote)
-library(rmarkdown)
+# library(rmarkdown)
 library(DT)
+library(reactable)
 library(htmltools)
 source("/home/rstudio/gospel_analysis_blog/_posts/ggtheme.R")
 source("/home/rstudio/gospel_analysis_blog/_posts/utils.R")
@@ -58,7 +59,7 @@ dfs <- lds_scriptures() %>%
 A 1978 article by Susan Ward Easton, ["Names of Christ in the Book of Mormon"](https://abn.churchofjesuschrist.org/study/ensign/1978/07/discovery/names-of-christ-in-the-book-of-mormon?lang=eng), enumerated 100 names for the Savior. You can see those
 listed here:
 
-```{r}
+```{r name_table}
 url <- "https://abn.churchofjesuschrist.org/study/ensign/1978/07/discovery/names-of-christ-in-the-book-of-mormon?lang=eng"
 tabs <- rvest::read_html(url) %>% html_table()
 df2 <- tabs[[2]] 
@@ -70,14 +71,27 @@ names <- df2 %>%
   head(100)
 names_str <- paste(names, collapse = "|")
 
-paged_table(df2)
+df2 %>%
+  head(100) %>%
+  mutate(
+    N = row_number(),
+    Names = str_replace(Names, "^[0-9]*\\.", "") %>% trimws()
+    ) %>%
+  select(N, everything()) %>%
+  reactable(
+    defaultPageSize=5,
+    searchable=T,
+    columns= list(
+      N = colDef(minWidth = 40, header="#")
+    ))
+# paged_table(df2)
 ```
 
 Susan notes that there are 3,925 references to Christ in the Book of Mormon
 based on these phrases. I found that there were at least 4,499 references
 to those exact strings.
 
-```{r}
+```{r scrip_cnts}
 s_cnts <- dfs %>%
   mutate(cnt = str_count(text, names_str)) %>%
   select(volume_title, text, cnt) 
@@ -93,11 +107,14 @@ s_cnts %>%
   tab_header(title = "Number of References to Christ") %>%
   summary_rows(columns=cnt,
     fns = list(Total="sum"),
+    missing_text = "",
     decimals=0) %>%
-  fmt_number(cnt, decimals=0) 
+  fmt_number(
+    cnt,
+    decimals=0)
 ```
 
-```{r, fig.width = 3, fig.height = 3, fig.align = 'center'}
+```{r quote, fig.width = 3, fig.height = 3, fig.align = 'center'}
 text <- insta_text(
   '14,816',
   'The number of references to **Jesus Christ** in all the scriptures'
@@ -105,7 +122,7 @@ text <- insta_text(
 instaquote(text) 
 ```
 
-```{r}
+```{r gc_cnts}
 g_cnts <- dfg %>%
   mutate(cnt = str_count(paragraph, names_str)) %>%
   select(paragraph, cnt, year)
