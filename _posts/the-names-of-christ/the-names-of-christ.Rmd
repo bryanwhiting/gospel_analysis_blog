@@ -1,0 +1,116 @@
+---
+title: "The Names of Christ"
+description: |
+  A short description of the post.
+author:
+  - name: Bryan Whiting
+    url: https://www.bryanwhiting.com
+date: 09-05-2021
+slug: christ
+output:
+  distill::distill_article:
+    self_contained: false
+categories:
+   - general conference
+   - scriptures
+   - jesus christ
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(generalconference)
+library(scriptuRs)
+library(dplyr)
+library(gt)
+library(tidytext)
+library(ggplot2)
+library(instaquote)
+library(rmarkdown)
+library(DT)
+library(htmltools)
+source("/home/rstudio/gospel_analysis_blog/_posts/ggtheme.R")
+source("/home/rstudio/gospel_analysis_blog/_posts/utils.R")
+
+colors <- palette_pander(10)
+# extrafont::loadfonts() ## to load the font
+options(max.print = 1000)
+data("genconf")
+dfg <- genconf %>%
+  unnest(sessions) %>%
+  unnest(talks) %>%
+  unnest(paragraphs) %>%
+  mutate(
+    paragraph2 = tolower(paragraph),
+    date_str = date %>% format("%b %Y"),
+    deep_link = glue("{url}.{p_id}?lang=eng#{p_id}"),
+    p_href = glue('{author1} <a href="{deep_link}">{title1}</a>, {date_str}'),
+    pquote = glue("{paragraph}<br>{p_href}")
+  )
+
+dfs <- lds_scriptures() %>%
+  mutate(text2 = tolower(text))
+```
+
+A 1978 article by Susan Ward Easton, ["Names of Christ in the Book of Mormon"](https://abn.churchofjesuschrist.org/study/ensign/1978/07/discovery/names-of-christ-in-the-book-of-mormon?lang=eng), enumerated 100 names for the Savior. You can see those
+listed here:
+
+```{r}
+url <- "https://abn.churchofjesuschrist.org/study/ensign/1978/07/discovery/names-of-christ-in-the-book-of-mormon?lang=eng"
+tabs <- rvest::read_html(url) %>% html_table()
+df2 <- tabs[[2]] 
+
+names <- df2 %>%
+  pull(Names) %>%
+  str_replace("^[0-9]*\\.", "") %>%
+  trimws() %>%
+  head(100)
+names_str <- paste(names, collapse = "|")
+
+paged_table(df2)
+```
+
+Susan notes that there are 3,925 references to Christ in the Book of Mormon
+based on these phrases. I found that there were at least 4,499 references
+to those exact strings.
+
+```{r}
+s_cnts <- dfs %>%
+  mutate(cnt = str_count(text, names_str)) %>%
+  select(volume_title, text, cnt) 
+
+s_cnts %>%
+  group_by(volume_title) %>%
+  summarize(cnt = sum(cnt)) %>%
+  gt() %>%
+  cols_label(
+    volume_title = "Scripture Volume",
+    cnt = "Count"
+  ) %>%
+  tab_header(title = "Number of References to Christ") %>%
+  summary_rows(columns=cnt,
+    fns = list(Total="sum"),
+    decimals=0) %>%
+  fmt_number(cnt, decimals=0) 
+```
+
+```{r, fig.width = 3, fig.height = 3, fig.align = 'center'}
+text <- insta_text(
+  '14,816',
+  'The number of references to **Jesus Christ** in all the scriptures'
+)
+instaquote(text) 
+```
+
+```{r}
+g_cnts <- dfg %>%
+  mutate(cnt = str_count(paragraph, names_str)) %>%
+  select(paragraph, cnt, year)
+
+```
+
+
+
