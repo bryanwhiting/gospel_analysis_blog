@@ -87,9 +87,8 @@ df2 %>%
 # paged_table(df2)
 ```
 
-Susan notes that there are 3,925 references to Christ in the Book of Mormon
-based on these phrases. I found that there were at least 4,499 references
-to those exact strings.
+Easton notes that there are 3,925 references to Christ in the Book of Mormon
+based on these phrases. In this article, it was discovered there were at least 4,499 references to those same names^[It's possible that the author's analysis over counts some references that Easton excluded]. Comparing scriptures is interesting:
 
 ```{r scrip_cnts}
 s_cnts <- dfs %>%
@@ -97,22 +96,61 @@ s_cnts <- dfs %>%
   select(volume_title, text, cnt) 
 
 s_cnts %>%
+  mutate(at_least_one = cnt > 0) %>%
   group_by(volume_title) %>%
-  summarize(cnt = sum(cnt)) %>%
+  summarize(
+    n_verses = n(),
+    cnt = sum(cnt),
+    n_per_verse = cnt/n_verses,
+    at_least_one = sum(at_least_one),
+    pct_coverage = at_least_one/n_verses
+    ) %>%
   gt() %>%
   cols_label(
     volume_title = "Scripture Volume",
-    cnt = "Count"
+    n_verses = "Verses in Volume",
+    cnt = "# of References",
+    at_least_one = "Verses",
+    n_per_verse = "References Per Verse",
+    pct_coverage = "% Verses"
   ) %>%
-  tab_header(title = "Number of References to Christ") %>%
-  summary_rows(columns=cnt,
+  tab_header(title = "References to Christ in the Scriptures") %>%
+  summary_rows(columns=c(cnt, n_verses, at_least_one),
     fns = list(Total="sum"),
     missing_text = "",
     decimals=0) %>%
   fmt_number(
-    cnt,
-    decimals=0)
+    c(cnt, n_verses, at_least_one),
+    decimals=0) %>%
+  fmt_number(
+    n_per_verse, decimals = 2
+  ) %>%
+  fmt_percent(pct_coverage, decimals=0) %>%
+  tab_spanner(
+    label = "All References to Christ",
+    columns = c(cnt, n_per_verse)
+  ) %>%
+  tab_spanner(
+    label = "At Least One Reference",
+    columns = c(at_least_one, pct_coverage)
+  ) %>%
+  tab_style(
+    style = cell_borders(
+      sides = "left",
+              color = "#BBBBBB",
+        weight = px(1.5),
+        style = "solid"
+    ),
+    locations = cells_body(
+      columns = c(cnt, at_least_one),
+      rows = everything()
+    )
+  )
 ```
+
+The Book of Mormon has more references to Christ than the other Testaments, but the Pearl of Great Price references the Savior the most.
+
+How powerful that a whopping 41% of verses in the Book of Mormon refer to Christ! If you read just five verses, two of them are bound to inspire you to think of Him.
 
 ```{r quote, fig.width = 3, fig.height = 3, fig.align = 'center'}
 text <- insta_text(
