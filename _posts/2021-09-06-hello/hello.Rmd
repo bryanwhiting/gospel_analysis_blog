@@ -1,0 +1,23 @@
+---
+title: "hello"
+description: |
+  A short description of the post.
+author:
+  - name: Bryan Whiting
+    url: https://www.bryanwhiting.com
+date: 09-06-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, echo=T}
+slug <- basename(getwd())
+slug
+```
+

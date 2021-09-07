@@ -23,6 +23,7 @@ xaringanExtra::use_panelset()
 
 ## Airtable, Zapier, and Instagram
 
+1. Install `airtabler` package from GitHub
 1. Create new Instagram account with new email address (don't connect it to a personal account)
 1. Create airtable account and new base + table
 1. Get Airtable API key from https://airtable.com/account

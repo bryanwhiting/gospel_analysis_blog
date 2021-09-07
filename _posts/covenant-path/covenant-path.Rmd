@@ -27,8 +27,8 @@ knitr::opts_chunk$set(
 library(generalconference)
 library(dplyr)
 library(ggplot2)
-source("/home/rstudio/gospel_analysis_blog/_posts/ggtheme.R")
-source("/home/rstudio/gospel_analysis_blog/_posts/utils.R")
+source("/home/rstudio/gospel_analysis_blog/R/ggtheme.R")
+source("/home/rstudio/gospel_analysis_blog/R/utils.R")
 
 colors = palette_pander(10)
 # extrafont::loadfonts() ## to load the font

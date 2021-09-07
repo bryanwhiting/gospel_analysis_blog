@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2021-09-06-hello/",
+    "title": "hello",
+    "description": "A short description of the post.",
+    "author": [
+      {
+        "name": "Bryan Whiting",
+        "url": "https://www.bryanwhiting.com"
+      }
+    ],
+    "date": "2021-09-06",
+    "categories": [],
+    "contents": "\n\n\nslug <- basename(getwd())\nslug\n\n\n[1] \"2021-09-06-hello\"\n\n\n\n\n",
+    "preview": {},
+    "last_modified": "2021-09-06T23:27:43+00:00",
+    "input_file": "hello.knit.md"
+  },
+  {
     "path": "posts/the-names-of-christ/",
     "title": "The Names of Christ",
     "description": "Christ is called by at least 100 names in the scriptures.",
