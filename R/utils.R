@@ -199,7 +199,7 @@ airtable_post <- function(slug, name=NULL, table="Scheduled"){
   SocialMediaPosts <-
     airtable(
       base = airtable_base,
-      tables = c("Testing")
+      tables = c(table)
     )
   scheduled <- SocialMediaPosts[[table]]$select()
 
