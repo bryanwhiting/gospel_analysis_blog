@@ -18,7 +18,12 @@ categories:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+slug <- "the-names-of-christ" # basename(getwd())
 ```
 
 ```{r load}
@@ -33,8 +38,8 @@ library(instaquote)
 library(DT)
 library(reactable)
 library(htmltools)
-source("/home/rstudio/gospel_analysis_blog/_posts/ggtheme.R")
-source("/home/rstudio/gospel_analysis_blog/_posts/utils.R")
+source("/home/rstudio/gospel_analysis_blog/R/ggtheme.R")
+source("/home/rstudio/gospel_analysis_blog/R/utils.R")
 
 colors <- palette_pander(10)
 # extrafont::loadfonts() ## to load the font
@@ -49,7 +54,9 @@ dfg <- genconf %>%
     date_str = date %>% format("%b %Y"),
     deep_link = glue("{url}.{p_id}?lang=eng#{p_id}"),
     p_href = glue('{author1} <a href="{deep_link}">{title1}</a>, {date_str}'),
-    pquote = glue("{paragraph}<br>{p_href}")
+    pquote = glue("{paragraph}<br>{p_href}"),
+    # https://stackoverflow.com/a/26406796
+    n_words = str_count(paragraph2, "\\S+")
   )
 
 dfs <- lds_scriptures() %>%
@@ -62,7 +69,7 @@ listed here:
 ```{r name_table}
 url <- "https://abn.churchofjesuschrist.org/study/ensign/1978/07/discovery/names-of-christ-in-the-book-of-mormon?lang=eng"
 tabs <- rvest::read_html(url) %>% html_table()
-df2 <- tabs[[2]] 
+df2 <- tabs[[2]]
 
 names <- df2 %>%
   pull(Names) %>%
@@ -71,19 +78,24 @@ names <- df2 %>%
   head(100)
 names_str <- paste(names, collapse = "|")
 
+# Test: this is an overcounting
+# str_count("Lord, the Lord of Hosts", "Lord|Lord of Hosts|Hosts")
+
+
 df2 %>%
   head(100) %>%
   mutate(
     N = row_number(),
     Names = str_replace(Names, "^[0-9]*\\.", "") %>% trimws()
-    ) %>%
+  ) %>%
   select(N, everything()) %>%
   reactable(
-    defaultPageSize=5,
-    searchable=T,
-    columns= list(
-      N = colDef(minWidth = 40, header="#")
-    ))
+    defaultPageSize = 5,
+    searchable = T,
+    columns = list(
+      N = colDef(minWidth = 40, header = "#")
+    )
+  )
 # paged_table(df2)
 ```
 
@@ -93,7 +105,7 @@ based on these phrases. In this article, it was discovered there were at least 4
 ```{r scrip_cnts}
 s_cnts <- dfs %>%
   mutate(cnt = str_count(text, names_str)) %>%
-  select(volume_title, text, cnt) 
+  select(volume_title, text, cnt)
 
 s_cnts %>%
   mutate(at_least_one = cnt > 0) %>%
@@ -101,10 +113,10 @@ s_cnts %>%
   summarize(
     n_verses = n(),
     cnt = sum(cnt),
-    n_per_verse = cnt/n_verses,
+    n_per_verse = cnt / n_verses,
     at_least_one = sum(at_least_one),
-    pct_coverage = at_least_one/n_verses
-    ) %>%
+    pct_coverage = at_least_one / n_verses
+  ) %>%
   gt() %>%
   cols_label(
     volume_title = "Scripture Volume",
@@ -115,17 +127,21 @@ s_cnts %>%
     pct_coverage = "% Verses"
   ) %>%
   tab_header(title = "References to Christ in the Scriptures") %>%
-  summary_rows(columns=c(cnt, n_verses, at_least_one),
-    fns = list(Total="sum"),
+  summary_rows(
+    columns = c(cnt, n_verses, at_least_one),
+    fns = list(Total = "sum"),
     missing_text = "",
-    decimals=0) %>%
+    decimals = 0
+  ) %>%
   fmt_number(
     c(cnt, n_verses, at_least_one),
-    decimals=0) %>%
-  fmt_number(
-    n_per_verse, decimals = 2
+    decimals = 0
   ) %>%
-  fmt_percent(pct_coverage, decimals=0) %>%
+  fmt_number(
+    n_per_verse,
+    decimals = 2
+  ) %>%
+  fmt_percent(pct_coverage, decimals = 0) %>%
   tab_spanner(
     label = "All References to Christ",
     columns = c(cnt, n_per_verse)
@@ -137,9 +153,9 @@ s_cnts %>%
   tab_style(
     style = cell_borders(
       sides = "left",
-              color = "#BBBBBB",
-        weight = px(1.5),
-        style = "solid"
+      color = "#BBBBBB",
+      weight = px(1.5),
+      style = "solid"
     ),
     locations = cells_body(
       columns = c(cnt, at_least_one),
@@ -154,18 +170,112 @@ How powerful that a whopping 41% of verses in the Book of Mormon refer to Christ
 
 ```{r quote, fig.width = 3, fig.height = 3, fig.align = 'center'}
 text <- insta_text(
-  '14,816',
-  'The number of references to **Jesus Christ** in all the scriptures'
+  "14,816",
+  "The number of references to **Jesus Christ** in all the scriptures"
 )
-instaquote(text) 
+p <- instaquote(text)
+photopost(
+  p,
+  caption = "Christ is referred to by 100 names in The Book of Mormon, which appear 4,500 times.",
+  slug = slug,
+  name = "names14k"
+)
+p
 ```
+
+## General Conference References to Christ
+
+If we search for these same names of Christ as used in General
+Conference talks, we see that each year, the leaders of the Church
+speak of Christ thousands of times.
 
 ```{r gc_cnts}
 g_cnts <- dfg %>%
   mutate(cnt = str_count(paragraph, names_str)) %>%
-  select(paragraph, cnt, year)
+  select(paragraph, cnt, year) %>%
+  group_by(year) %>%
+  summarize(cnt = sum(cnt)) %>%
+  filter(year <= 2020)
 
+p <- g_cnts %>%
+  ggplot(aes(x = year, y = cnt)) +
+  geom_bar(stat = "identity", fill = colors[1]) +
+  labs(
+    title = 'Prophets speak of Christ',
+    subtitle = custom_title(
+      list(
+        c("References to **Christ**", colors[1]),
+        "in each year of conference"
+      )
+    ),
+    y = ""
+  ) +
+  theme_ga 
+
+photopost(
+  p,
+  caption = "Thousands...",
+  slug = slug,
+  name = "gc_cnts"
+)
+p
 ```
 
+Are prophets speaking more of Christ? Each year, there are a different number of speakers and each talk is of a different length. In the 70's, General Conference had multiple sessions. If we divide the number of
+words in a year by the number of references to Christ, we can see that
+recently, about 3% of all words spoken in conference are of Christ.
 
+```{r pct_cnts}
+g_cnts <- dfg %>%
+  mutate(cnt = str_count(paragraph, names_str)) %>%
+  filter(year <= 2020) %>%
+  group_by(year) %>%
+  summarize(
+    n_paragraph = n(),
+    cnt = sum(cnt), 
+    n_words = sum(n_words)) %>%
+  mutate(pct = cnt/n_words)
+
+p <- g_cnts %>%
+  ggplot(aes(x = year, y = pct)) +
+  geom_line(color = colors[1]) +
+  geom_point(color = colors[1]) +
+  labs(
+    title = 'Prophets are speaking more of Christ!',
+    subtitle = custom_title(
+      list(
+        c("References to **Christ**", colors[1]),
+        "in each year of conference"
+      )
+    ),
+    y = ""
+  ) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, .03)) + 
+  theme_ga 
+photopost(
+  p,
+  caption = "Prophets speak more of Christ now than ever",
+  slug = slug,
+  name = "pct_cnts"
+)
+p
+```
+
+One talk in the 70's spoke of Christ 182 times. Check out the talks
+that speak the most of Christ.
+
+```{r}
+x <- dfg %>%
+  mutate(cnt = str_count(paragraph, names_str)) %>%
+  group_by(title1, author1, date_str, url) %>%
+  summarize(cnt = sum(cnt)) %>%
+  arrange(desc(cnt)) %>%
+  mutate(url = glue('<a href="{url}">link</a>')) %>%
+  select(title1, author1, date_str, url, cnt) %>%
+  head(100)
+
+datatable(
+  x, escape = F
+)
+```
 

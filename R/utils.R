@@ -4,6 +4,7 @@ library(lubridate)
 library(glue)
 library(magrittr)
 library(ggplot2)
+airtable_base <- "applRcAPoTh7RI9O4"
 root_posts = "/home/rstudio/gospel_analysis_blog/_posts"
 root_img = "/home/rstudio/gospel_analysis_blog/img"
 hashtags = "
@@ -149,24 +150,27 @@ datatable_quotes <- function(df, n = 20, phrases="xxxx") {
 save_img <- function(img, slug, name){
   if(class(img)[2] == 'ggplot'){
     path = glue("{root_img}/{slug}/{name}/plot.png")
-    ggsave(filename=path, plot=img, width=3, height=3)
+    ggsave(filename=path, plot=img, width=6, height=6)
   }
 }
 
-save_copy <- function(slug, name, copy){
+save_copy <- function(copy, slug, name){
   dir = glue("{root_img}/{slug}/{name}")
   dir.create(dir, recursive=T, showWarnings=F)
   copy_path = glue("{dir}/copy.txt")
   write(x = copy, file = copy_path)
 }
 
-copy <- function(copy, hashtags){
-  glue("{copy}\n\n{hashtags}")
+copy <- function(copy, hashtag){
+  glue("{copy}\n\n{hashtag}")
 }
 
+photopost <- function(p, caption, slug, name, hashtag=hashtags){
+  save_img(img=p, slug=slug, name=name)
+  save_copy(copy=copy(caption, hashtags), slug=slug, name=name)
+}
 
 # airtable_write_copy('the-names-of-christ', 'quote', copy=glue('hello world\n{hashtags}'))
-
 read_copy <- function(slug, name){
   path = glue("{root_img}/{slug}/{name}/copy.txt")
   readLines(path) %>%
@@ -187,24 +191,33 @@ get_img_files <- function(slug){
   out
 }
 
-upload_to_airtable <- function(slug, chunk){
-  plot_path = glue("https://www.gospelanalysis.com/posts/{slug}/{slug}_files/figure-html5/{chunk}-1.png")
+airtable_post <- function(slug, name=NULL, table="Scheduled"){
+  # specify name if you want to only upload one
+  # table = "Testing"
+  posts <- get_img_files(slug)
 
   SocialMediaPosts <-
     airtable(
-      base = "applRcAPoTh7RI9O4",
-      tables = c("Scheduled")
+      base = airtable_base,
+      tables = c("Testing")
     )
-  scheduled <- SocialMediaPosts$Scheduled$select()
+  scheduled <- SocialMediaPosts[[table]]$select()
 
-  new_post <- list(
-    created_date = now(tz = "US/Pacific"),
-    attachment_url = ,
-    copy = airtable_read_copy(slug, chunk),
-    tagged_users = "@gospelanalysis",
-    status = "backlog",
-    scheduled_datetime = ymd_hms("2021-09-06 16:15:00", tz= "US/Pacific")
-  )
-  resp <- SocialMediaPosts$Scheduled$insert(new_post)
+  for(post in names(posts)){
+    plot_url <- posts[[post]]$plot
+    copy_text <- posts[[post]]$copy
 
+    new_post <- list(
+      created_date = now(tz = "US/Pacific"),
+      attachment_url = plot_url,
+      copy = copy_text,
+      tagged_users = "@gospelanalysis",
+      status = "backlog"
+      # TODO: add scheduling (requires premium?)
+      # scheduled_datetime = ymd_hms("2021-09-06 16:15:00", tz= "US/Pacific")
+    )
+    resp <- SocialMediaPosts[[table]]$insert(new_post)
+  }
+  resp
 }
+

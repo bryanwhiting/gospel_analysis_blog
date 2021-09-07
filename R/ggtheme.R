@@ -18,7 +18,9 @@ theme_ga_raw = function() {
       axis.title.x = element_blank(),
       # markdown
       plot.title = ggtext::element_markdown(),
-      plot.subtitle = ggtext::element_markdown()
+      plot.subtitle = ggtext::element_markdown(),
+      plot.title.position = "plot",
+      plot.caption.position =  "plot"
     )
 }
 
