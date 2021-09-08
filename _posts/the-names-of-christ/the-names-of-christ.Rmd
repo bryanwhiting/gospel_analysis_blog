@@ -269,7 +269,7 @@ p <- g_cnts %>%
     title = 'Prophets are speaking more of Christ!',
     subtitle = custom_title(
       list(
-        c("References to **Christ**", colors[1]),
+        c("% of words referring to **Christ**", colors[1]),
         "in each year of conference, with",
         c("trend line.", colors[2])
       )

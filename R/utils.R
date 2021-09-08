@@ -4,6 +4,7 @@ library(lubridate)
 library(glue)
 library(magrittr)
 library(ggplot2)
+library(stringr)
 airtable_base <- "applRcAPoTh7RI9O4"
 root_posts = "/home/rstudio/gospel_analysis_blog/_posts"
 root_img = "/home/rstudio/gospel_analysis_blog/img"
@@ -207,17 +208,19 @@ airtable_post <- function(slug, name=NULL, tab_name="Scheduled"){
     )
   scheduled <- SocialMediaPosts[[tab_name]]$select()
 
-  if(!isnull(name)){
+  if(!is.null(name)){
     post_names <- name
   } else {
     post_names <- names(posts)
   }
   for(post in post_names){
+    slug_name = glue("{slug}-{post}")
     plot_url <- posts[[post]]$plot
     copy_text <- posts[[post]]$copy
 
     new_post <- list(
       created_date = now(tz = "US/Pacific"),
+      slug_name = slug_name,
       attachment_url = plot_url,
       copy = copy_text,
       tagged_users = "@gospelanalysis",
