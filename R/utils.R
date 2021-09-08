@@ -12,16 +12,16 @@ __________________________
 📷: www.gospelanalysis.com
 📧: gospelanalysisnow@gmail.com - ask us a question!
 __________________________
-#churchofjesuschrist #churchofjesuschristoflatterdaysaints #genconf #generalconference #scripture #scriptures #scriptureoftheday
-#lds #ldsmemes #ldsquotes #ldsart #mormon #mormonmemes #mormons
-
-#jesuschrist #jesus #christ #christian #christianity #jesús #jesuslovesyou
-#disciple #discipleship #discipleofchrist #christianitypost #christianityquote #followingjesus #followingjesustogether #hearhim
-
-#data #datascience #dataanalytics #datascientist #datavisualization
-
-#religion #faith #faithquotes #faithblogger #faithwriter
+#churchofjesuschristoflatterdaysaints #churchofjesuschrist #hearhim
+#generalconference #scripture #scriptures
+#lds #ldsquotes #mormon
+#jesuschrist #jesus #jesús #christ #savior
+#christian #christianity #christianitypost #christianityquote
+#discipleship
+#data #datascience #dataanalytics #datascientist #dataviz
+#religion #faith #faithquotes #faithoverfear
 "
+stopifnot(str_count(hashtags, "#") <= 30)
 
 #' Quote Paragraph
 #'
@@ -147,10 +147,14 @@ datatable_quotes <- function(df, n = 20, phrases="xxxx") {
 #
 # Airtable:
 # for each name in get_files()$list, upload image + copy
-save_img <- function(img, slug, name){
+save_img <- function(img, slug, name, quote){
   if(class(img)[2] == 'ggplot'){
     path = glue("{root_img}/{slug}/{name}/plot.png")
-    ggsave(filename=path, plot=img, width=6, height=6)
+    if(quote){
+      ggsave(filename=path, plot=img, width=3, height=3)
+    } else {
+      ggsave(filename=path, plot=img, width=6, height=6)
+    }
   }
 }
 
@@ -165,8 +169,8 @@ copy <- function(copy, hashtag){
   glue("{copy}\n\n{hashtag}")
 }
 
-photopost <- function(p, caption, slug, name, hashtag=hashtags){
-  save_img(img=p, slug=slug, name=name)
+photopost <- function(p, caption, slug, name, quote=F,hashtag=hashtags){
+  save_img(img=p, slug=slug, name=name, quote=quote)
   save_copy(copy=copy(caption, hashtags), slug=slug, name=name)
 }
 
@@ -191,19 +195,24 @@ get_img_files <- function(slug){
   out
 }
 
-airtable_post <- function(slug, name=NULL, table="Scheduled"){
+airtable_post <- function(slug, name=NULL, tab_name="Scheduled"){
   # specify name if you want to only upload one
-  # table = "Testing"
+  # tab_name = "Testing"
   posts <- get_img_files(slug)
 
   SocialMediaPosts <-
     airtable(
       base = airtable_base,
-      tables = c(table)
+      tables = c(tab_name)
     )
-  scheduled <- SocialMediaPosts[[table]]$select()
+  scheduled <- SocialMediaPosts[[tab_name]]$select()
 
-  for(post in names(posts)){
+  if(!isnull(name)){
+    post_names <- name
+  } else {
+    post_names <- names(posts)
+  }
+  for(post in post_names){
     plot_url <- posts[[post]]$plot
     copy_text <- posts[[post]]$copy
 
@@ -216,8 +225,44 @@ airtable_post <- function(slug, name=NULL, table="Scheduled"){
       # TODO: add scheduling (requires premium?)
       # scheduled_datetime = ymd_hms("2021-09-06 16:15:00", tz= "US/Pacific")
     )
-    resp <- SocialMediaPosts[[table]]$insert(new_post)
+    resp <- SocialMediaPosts[[tab_name]]$insert(new_post)
+    print(post)
   }
-  resp
+  invisible(resp)
 }
 
+
+
+# SEARCHING FUNCTIONS
+ask <- function(df_text, col, terms, output='dt', n = 200){
+  # varname <- deparse(substitute(col))
+
+  x <- df_text
+  color = "#56B4E9"
+  x$Text <- dplyr::pull(x, {{col}})
+  for(t in terms){
+    # filter to just search terms
+    x <- dplyr::filter(x, stringr::str_detect({{ col }}, t))
+    # highlight the terms
+    x <- dplyr::mutate(
+      x,
+      Text = stringr::str_replace_all(
+        Text,
+        t,
+        paste0('<span style="color:', color, '; font-weight:bold">', t, '</span>')
+      ))
+  }
+  x <- dplyr::select(x, -{{col}})
+  msg <- paste0('There are ', nrow(x), ' results. Showing ', n, '.')
+  message(msg)
+  x <- head(x, n)
+
+  if (output == 'view'){
+    View(x)
+  } else {
+    DT::datatable(
+      x,
+      escape=F
+    )
+  }
+}

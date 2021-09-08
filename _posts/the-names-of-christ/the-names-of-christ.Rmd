@@ -1,7 +1,10 @@
 ---
 title: "The Names of Christ"
 description: |
-  Christ is called by at least 100 names in the scriptures.
+  Christ is called by at least 100 names in the scriptures. Christ is
+  referred to in 41% of all Book of Mormon scriptures. Read to see
+  which General Conference speaker holds the record for the most references
+  to Christ in a single talk.
 author:
   - name: Bryan Whiting
     url: https://www.bryanwhiting.com
@@ -10,6 +13,8 @@ slug: christ
 output:
   distill::distill_article:
     self_contained: false
+    toc: true
+    toc_depth: 3
 categories:
    - general conference
    - scriptures
@@ -62,6 +67,8 @@ dfg <- genconf %>%
 dfs <- lds_scriptures() %>%
   mutate(text2 = tolower(text))
 ```
+
+## References to Christ in the Scriptures
 
 A 1978 article by Susan Ward Easton, ["Names of Christ in the Book of Mormon"](https://abn.churchofjesuschrist.org/study/ensign/1978/07/discovery/names-of-christ-in-the-book-of-mormon?lang=eng), enumerated 100 names for the Savior. You can see those
 listed here:
@@ -178,7 +185,8 @@ photopost(
   p,
   caption = "Christ is referred to by 100 names in The Book of Mormon, which appear 4,500 times.",
   slug = slug,
-  name = "names14k"
+  name = "names14k",
+  quote=T
 )
 p
 ```
@@ -221,31 +229,49 @@ photopost(
 p
 ```
 
+### Fraction of General Conference Words Referring to Christ
+
 Are prophets speaking more of Christ? Each year, there are a different number of speakers and each talk is of a different length. In the 70's, General Conference had multiple sessions. If we divide the number of
 words in a year by the number of references to Christ, we can see that
-recently, about 3% of all words spoken in conference are of Christ.
+recently about 2.5% of all words spoken in conference are of Christ.
 
 ```{r pct_cnts}
+names2 <- names %>%
+  tibble() %>%
+  filter(!(names %in% c("God", "Heavenly Father"))) %>%
+  pull() %>%
+  paste0(collapse = "|")
+
 g_cnts <- dfg %>%
-  mutate(cnt = str_count(paragraph, names_str)) %>%
+  mutate(
+    cnt = str_count(paragraph, names2),
+    at_least_one = cnt > 0
+    ) %>%
   filter(year <= 2020) %>%
   group_by(year) %>%
   summarize(
-    n_paragraph = n(),
     cnt = sum(cnt), 
-    n_words = sum(n_words)) %>%
-  mutate(pct = cnt/n_words)
+    n_words = sum(n_words),
+    n_paragraph = n(),
+    at_least_one = sum(at_least_one)
+    ) %>%
+  mutate(
+    pct_word = cnt/n_words,
+    pct_para = at_least_one/n_paragraph
+    )
 
 p <- g_cnts %>%
-  ggplot(aes(x = year, y = pct)) +
+  ggplot(aes(x = year, y = pct_word)) +
   geom_line(color = colors[1]) +
   geom_point(color = colors[1]) +
+  geom_smooth(se=F, color=colors[2]) + 
   labs(
     title = 'Prophets are speaking more of Christ!',
     subtitle = custom_title(
       list(
         c("References to **Christ**", colors[1]),
-        "in each year of conference"
+        "in each year of conference, with",
+        c("trend line.", colors[2])
       )
     ),
     y = ""
@@ -261,21 +287,75 @@ photopost(
 p
 ```
 
-One talk in the 70's spoke of Christ 182 times. Check out the talks
-that speak the most of Christ.
+### Percentage of General Conference Paragraphs Referring to Christ
+
+To compare these numbers to the Book of Mormon, we computed the fraction of paragraphs in General Conference that speak of Christ. Remember, the Book of
+Mormon refers to Christ in 41% of its verses. General Conference talks now refer more to Christ per paragraph than the other standard Works (except for the Pearl of Great Price, at 57% of verses.)
 
 ```{r}
+p <- g_cnts %>%
+  ggplot(aes(x = year, y = pct_para)) +
+  geom_line(color = colors[1]) +
+  geom_point(color = colors[1]) +
+  geom_smooth(se=F, color=colors[2]) + 
+  labs(
+    title = 'Prophets are speaking more of Christ!',
+    subtitle = custom_title(
+      list(
+        c("% of paragraphs referring to **Christ**", colors[1]),
+        "in each year <br>of conference with",
+        c("trend line.", colors[2])
+      )
+    ),
+    y = ""
+  ) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, .50)) + 
+  theme_ga 
+photopost(
+  p,
+  caption = "In 2020, 50% of paragraphs in General Conference talks referred to Christ",
+  slug = slug,
+  name = "pct_paragraphs"
+)
+p
+```
+
+
+### Top 20 talks Referring to Christ
+
+A Dallin H Oak talk in the 70's spoke of Christ 139 times. Check out the 20 talks
+that speak the most of Christ.^[Note: The text parser used in this analysis
+would search for "Jesus" and "Christ" separately, so "Jesus Christ" would
+count as two references.]
+
+```{r top_talks}
+pure_names = c("Savior|Jesus|Christ")
+# str_count("Jesus Christ", pure_names)
 x <- dfg %>%
-  mutate(cnt = str_count(paragraph, names_str)) %>%
+  mutate(
+    cnt = str_count(paragraph, names2),
+    jesus_only = str_count(paragraph, pure_names)
+    ) %>%
   group_by(title1, author1, date_str, url) %>%
-  summarize(cnt = sum(cnt)) %>%
+  summarize(
+    cnt = sum(cnt),
+    jesus_only = sum(jesus_only)) %>%
+  ungroup() %>%
   arrange(desc(cnt)) %>%
-  mutate(url = glue('<a href="{url}">link</a>')) %>%
-  select(title1, author1, date_str, url, cnt) %>%
-  head(100)
+  mutate(title1 = glue('{author1}, <a href="{url}">{title1}</a>, {date_str}')) %>%
+  select(title1, cnt, jesus_only) %>%
+  head(20)
 
 datatable(
-  x, escape = F
+  x, escape = F,
+  colnames = c("Talk", "All References to Christ", "References to Savior, Jesus, or Christ")
 )
 ```
 
+# Closing
+
+President Nelson's [Hear Him](https://www.churchofjesuschrist.org/study/general-conference/2020/04/45nelson?lang=eng) talk in April 2020 referenced Christ 70 times (ranked 7th out of top 20).
+
+Is it a wonder why Christ is being spoken of more by the Prophets?
+
+> And we talk of Christ, we rejoice in Christ, we preach of Christ, we prophesy of Christ, and we write according to our prophecies, that our children may know to what source they may look for a remission of their sins. [2 Nephi 25:26](https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/25.26?lang=eng#p25)

@@ -74,6 +74,6 @@ test_that("airtable_post() works", {
   p <- ggplot2::ggplot()
   photopost(p, caption='hello', slug='test', name='test', hashtag = "#hello")
   posts <- get_img_files("test")
-  ans <- airtable_post("test", table='Testing')
+  ans <- airtable_post("test", tab_name='Testing')
   expect_equal(ans$fields$attachment_url, "https://www.gospelanalysis.com/img/test/test/plot.png")
 })
