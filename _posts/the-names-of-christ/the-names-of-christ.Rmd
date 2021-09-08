@@ -2,9 +2,9 @@
 title: "The Names of Christ"
 description: |
   Christ is called by at least 100 names in the scriptures. Christ is
-  referred to in 41% of all Book of Mormon scriptures. Read to see
-  which General Conference speaker holds the record for the most references
-  to Christ in a single talk.
+  referred to in 41% of all Book of Mormon scriptures. Speakers in General 
+  Conference speak of Christ at an accelerated rate. See
+  who holds the record for the most references to Christ in a single talk.  
 author:
   - name: Bryan Whiting
     url: https://www.bryanwhiting.com
@@ -87,7 +87,6 @@ names_str <- paste(names, collapse = "|")
 
 # Test: this is an overcounting
 # str_count("Lord, the Lord of Hosts", "Lord|Lord of Hosts|Hosts")
-
 
 df2 %>%
   head(100) %>%
@@ -292,7 +291,7 @@ p
 To compare these numbers to the Book of Mormon, we computed the fraction of paragraphs in General Conference that speak of Christ. Remember, the Book of
 Mormon refers to Christ in 41% of its verses. General Conference talks now refer more to Christ per paragraph than the other standard Works (except for the Pearl of Great Price, at 57% of verses.)
 
-```{r}
+```{r plot_pct_paragraphs}
 p <- g_cnts %>%
   ggplot(aes(x = year, y = pct_para)) +
   geom_line(color = colors[1]) +
@@ -319,6 +318,92 @@ photopost(
 )
 p
 ```
+
+## A Shift in the Trend
+
+Prophets are speaking more of Christ than ever before, and at an accelerated rate.
+
+In 2000, there was a 'break' in the trend compared to before, meaning that authors started referring to Christ more than ever before. Speakers continued to break the trend for several years until 2011 when the 'new trend' was set. See footnote for methods.
+^[We use the `prophet` package in R, built by Facebook, which helps do "time series" modeling, or forecasting. Prophet is used to understand time series trends, and 
+predicts the future based on averages in the past. It also has the ability to detect
+what are called [changepoints](https://facebook.github.io/prophet/docs/trend_changepoints.html), or periods of time where the trends shift and experience a "new normal" if
+you will.]
+  
+
+```{r prophet_changepoint}
+library(prophet)
+names2 <- names %>%
+  tibble() %>%
+  filter(!(names %in% c("God", "Heavenly Father"))) %>%
+  pull() %>%
+  paste0(collapse = "|")
+g_cnts <- dfg %>%
+  mutate(
+    cnt = str_count(paragraph, names2),
+    at_least_one = cnt > 0
+    ) %>%
+  group_by(date) %>%
+  summarize(
+    cnt = sum(cnt), 
+    n_words = sum(n_words),
+    n_paragraph = n(),
+    at_least_one = sum(at_least_one)
+    ) %>%
+  mutate(
+    pct_word = cnt/n_words,
+    pct_para = at_least_one/n_paragraph
+    )
+ggplot(g_cnts, aes(x = date, y = pct_word)) + 
+  geom_point() + 
+  geom_line() + 
+  geom_smooth()
+
+tmp <- g_cnts %>% select(ds = date, y=pct_word)
+# mod <- prophet(tmp, changepoint.range = )
+mod <- prophet(tmp)
+# forecast future sessions: https://facebook.github.io/prophet/docs/non-daily_data.html
+future <- make_future_dataframe(mod, periods = 12*4, freq='month') %>%
+  filter(str_detect(as.character(ds), '-04-|-10-'))
+tail(future)
+forecast <- predict(mod, future)
+tail(forecast[c('ds', 'yhat', 'yhat_lower', 'yhat_upper')])
+
+p <- plot(mod, forecast) + add_changepoints_to_plot(mod) + 
+  labs(
+    title = 'The shift to speaking more of Christ happend 2000-2010',
+    subtitle = custom_title(
+      list(
+        "% of words referring to **Christ** in each session", 
+        "<br>of conference with", 
+        c("**forecast**", colors[1]),
+        "and",
+        c("**changepoints**", "red")
+      )
+    ),
+    y = ""
+  ) +
+  scale_y_continuous(labels = scales::percent, limits = c(.01, .03)) + 
+  theme_ga
+p
+photopost(
+  p,
+  caption = "Prophets are speaking of Christ at an accelerated rate each conference.
+  
+  In 2000, there was a 'break' in the trend compared to before, meaning that authors started referring to Christ more than ever before. Speakers continued to break the trend for several years until 2011 when the 'new trend' was set. 
+  
+  As you can see, prophets continue to speak more and more of Christ. The blue shade represents a 95% probability band, or in other words, we'd expect that, based on past data, there's a 95% chance that authors would speak of Christ, within this range.
+  
+  So in April 2020, the max expectation was that authors would refer to Christ 2.25% of
+the time (top of blue band). In reality, they mentioned Him over 2.5% of every word.",
+  slug = slug,
+  name = "prophet_changepoint"
+)
+```
+
+As you can see, prophets continue to speak more and more of Christ. The blue shade represents a 95% probability band, or in other words, we'd expect that, based on past data, there's a 95% chance that authors would speak of Christ, within this range.
+  
+So in April 2020, the max expectation was that authors would refer to Christ 2.25% of
+the time (top of blue band). In reality, they mentioned Him over 2.5% of every word.
 
 
 ### Top 20 talks Referring to Christ
@@ -351,6 +436,7 @@ datatable(
   colnames = c("Talk", "All References to Christ", "References to Savior, Jesus, or Christ")
 )
 ```
+
 
 # Closing
 
