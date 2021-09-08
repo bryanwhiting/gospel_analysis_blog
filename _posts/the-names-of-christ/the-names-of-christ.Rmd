@@ -356,7 +356,10 @@ g_cnts <- dfg %>%
 ggplot(g_cnts, aes(x = date, y = pct_word)) + 
   geom_point() + 
   geom_line() + 
-  geom_smooth()
+  geom_smooth() + 
+  labs(title = 'Trend by session in % of words spoken of Christ', y = "") + 
+  scale_y_continuous(labels = scales::percent, limits = c(.01, .03)) + 
+  theme_ga
 
 tmp <- g_cnts %>% select(ds = date, y=pct_word)
 # mod <- prophet(tmp, changepoint.range = )
@@ -364,9 +367,9 @@ mod <- prophet(tmp)
 # forecast future sessions: https://facebook.github.io/prophet/docs/non-daily_data.html
 future <- make_future_dataframe(mod, periods = 12*4, freq='month') %>%
   filter(str_detect(as.character(ds), '-04-|-10-'))
-tail(future)
+# tail(future)
 forecast <- predict(mod, future)
-tail(forecast[c('ds', 'yhat', 'yhat_lower', 'yhat_upper')])
+# tail(forecast[c('ds', 'yhat', 'yhat_lower', 'yhat_upper')])
 
 p <- plot(mod, forecast) + add_changepoints_to_plot(mod) + 
   labs(
