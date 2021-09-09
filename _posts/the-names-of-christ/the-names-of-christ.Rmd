@@ -9,7 +9,6 @@ author:
   - name: Bryan Whiting
     url: https://www.bryanwhiting.com
 date: 09-05-2021
-slug: christ
 output:
   distill::distill_article:
     self_contained: false
@@ -23,28 +22,21 @@ categories:
 
 
 ```{r setup, include=FALSE}
+slug <- "the-names-of-christ" # basename(getwd())
 knitr::opts_chunk$set(
   echo = FALSE,
   message = FALSE,
   warning = FALSE
 )
-slug <- "the-names-of-christ" # basename(getwd())
 ```
 
 ```{r load}
-library(generalconference)
-library(scriptuRs)
-library(dplyr)
-library(gt)
-library(tidytext)
-library(ggplot2)
-library(instaquote)
-# library(rmarkdown)
-library(DT)
-library(reactable)
-library(htmltools)
-source("/home/rstudio/gospel_analysis_blog/R/ggtheme.R")
-source("/home/rstudio/gospel_analysis_blog/R/utils.R")
+here::i_am(fs::path('_posts', slug, slug, ext='Rmd'))
+pkgs <- c("generalconference", "scriptuRs", "instaquote",
+"dplyr", "gt", "tidytext", "DT", "reactable", "htmltools", "here")
+for(p in pkgs) library(p, character.only = T)
+source(here("R/ggtheme.R"), local = knitr::knit_global())
+source(here("R/utils.R"), local = knitr::knit_global())
 
 colors <- palette_pander(10)
 # extrafont::loadfonts() ## to load the font
@@ -308,7 +300,7 @@ p <- g_cnts %>%
     ),
     y = ""
   ) +
-  scale_y_continuous(labels = scales::percent, limits = c(0, .50)) + 
+  scale_y_continuous(labels = scales::percent_format(accuracy=.1), limits = c(.30, .50)) + 
   theme_ga 
 photopost(
   p,
@@ -353,17 +345,17 @@ g_cnts <- dfg %>%
     pct_word = cnt/n_words,
     pct_para = at_least_one/n_paragraph
     )
-ggplot(g_cnts, aes(x = date, y = pct_word)) + 
-  geom_point() + 
-  geom_line() + 
-  geom_smooth() + 
-  labs(title = 'Trend by session in % of words spoken of Christ', y = "") + 
-  scale_y_continuous(labels = scales::percent, limits = c(.01, .03)) + 
-  theme_ga
+# ggplot(g_cnts, aes(x = date, y = pct_word)) + 
+#   geom_point() + 
+#   geom_line() + 
+#   geom_smooth() + 
+#   labs(title = 'Trend by session in % of words spoken of Christ', y = "") + 
+#   scale_y_continuous(labels = scales::percent, limits = c(.01, .03)) + 
+#   theme_ga
 
 tmp <- g_cnts %>% select(ds = date, y=pct_word)
 # mod <- prophet(tmp, changepoint.range = )
-mod <- prophet(tmp)
+mod <- prophet(tmp, changepoint.range = .8)
 # forecast future sessions: https://facebook.github.io/prophet/docs/non-daily_data.html
 future <- make_future_dataframe(mod, periods = 12*4, freq='month') %>%
   filter(str_detect(as.character(ds), '-04-|-10-'))
@@ -385,7 +377,7 @@ p <- plot(mod, forecast) + add_changepoints_to_plot(mod) +
     ),
     y = ""
   ) +
-  scale_y_continuous(labels = scales::percent, limits = c(.01, .03)) + 
+  scale_y_continuous(labels = scales::percent_format(accuracy=.1), limits = c(.01, .03)) + 
   theme_ga
 p
 photopost(

@@ -1,4 +1,5 @@
 # Functions for formatting paragraphs
+here::i_am('R/utils.R')
 library(airtabler)
 library(lubridate)
 library(glue)
@@ -6,8 +7,7 @@ library(magrittr)
 library(ggplot2)
 library(stringr)
 airtable_base <- "applRcAPoTh7RI9O4"
-root_posts = "/home/rstudio/gospel_analysis_blog/_posts"
-root_img = "/home/rstudio/gospel_analysis_blog/img"
+root_img = here::here("img")
 hashtags = "
 __________________________
 📷: www.gospelanalysis.com

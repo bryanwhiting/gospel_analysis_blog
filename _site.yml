@@ -7,6 +7,9 @@ google_analytics: "UA-206703936-1"
 output_dir: "docs"
 base_url: https://www.gospelanalysis.com
 theme: theme.css
+twitter:
+  creator: "@bryanwhiting"
+favicon: img/names14k_favicon.png
 navbar:
   right:
     - text: "Home"
@@ -16,4 +19,4 @@ navbar:
 output: distill::distill_article
 collections:
   posts:
-    share: [twitter, linkedin, facebook, google-plus, pinterest]
+    share: [twitter, linkedin, facebook, pinterest]

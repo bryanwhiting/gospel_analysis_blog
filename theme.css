@@ -12,6 +12,19 @@
 /* This must remain at the top of this file.                 */
 
 
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300;1,400;1,500;1,700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+
 
 html {
   /*-- Main font sizes --*/
@@ -89,3 +102,40 @@ strong {
   height: 50px;
   gap: 1px;
 } */
+
+
+/* Thanks: https://github.com/mfherman/westchester-covid/blob/master/site/theme.css */
+.panel-tab {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.distill-site-footer {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.plotly a {
+  fill: rgba(0, 0, 0, 0.6) !important;
+  text-decoration: underline !important;
+  font-family: Roboto, sans-serif;
+  font-size: 11px;
+}
+
+.dataTable caption {
+  caption-side: bottom !important;
+  text-align: right !important;
+  font-size: 11px;
+  margin-top: 7px;
+  font-family: Roboto, sans-serif;
+}
+
+.dataTable tbody, .dataTable th {
+  font-size: 15px !important;
+  color: #333 !important;
+  line-height: 1.7em !important;
+}
+
+.dataTables_info, .dataTables_filter, .dtr-title, .dataTables_empty, .dataTables_paginate, .dataTable > thead {
+  font-family: "IBM Plex Sans", sans-serif !important;
+  font-variant-caps: all-small-caps !important;
+  border-bottom: 0px !important;
+}

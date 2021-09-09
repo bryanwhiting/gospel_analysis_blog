@@ -11,7 +11,7 @@ theme_ga_raw = function() {
   theme_bw(base_size=12, base_family="Avenir") + #%+replace%
     theme(
       panel.background  = element_blank(),
-      plot.background = element_rect(fill=bg_color, colour=NA),
+      plot.background = element_rect(fill=bg_color, colour="white"),
       legend.background = element_rect(fill=bg_color, colour=NA),
       panel.border = element_blank(),
       axis.ticks = element_blank(),
