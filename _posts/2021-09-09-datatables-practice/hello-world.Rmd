@@ -1,0 +1,83 @@
+---
+title: "hello"
+description: |
+  A short description of the post.
+author:
+  - name: Bryan Whiting
+    url: https://www.bryanwhiting.com
+date: 09-09-2021
+output:
+  distill::distill_article:
+    self_contained: false
+draft: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Some data
+
+```{r}
+library(DT)
+library(htmltools)
+
+df <- mtcars
+df %>%
+datatable(
+    class = "compact hover",
+    extensions = c("Scroller", "Responsive"),
+    caption = tags$caption(
+      style = 'caption-side: bottom;',
+      withTags(div(HTML('Source: <a href="https://www.churchofjesuschrist.org/study/general-conference">The Church of Jesus Christ of Latter-day Saints</a>')))
+    ),
+    options = list(
+      # dom = "ftp",
+      deferRender = TRUE,
+      scrollY = 250,
+      scroller = TRUE,
+      search = list(regex = T),
+      pageLength=50,
+      # idea copied: https://glin.github.io/reactable/articles/examples.html#language-options
+      language = list(paginate = list(
+        `first` = "\u276e",
+        `previous` = "\u276e",
+        `next` = "\u276f"))
+      )
+    ) %>% 
+  # formatStyle(1, fontFamily = "IBM Plex Sans") %>% 
+  # formatStyle(1:ncol(df), fontFamily = "Roboto Mono")
+  formatStyle(1:ncol(df), fontFamily = "IBM Plex Sans")
+```
+
+
+```{r}
+datatable(df, 
+    # class = "compact hover",
+    extensions = c("Scroller", "Responsive"),
+    caption = tags$caption(
+      style = 'caption-side: bottom;',
+      withTags(div(HTML('Source: <a href="https://westchester-covid.mattherman.info/about.html#new-york-state-statewide-covid-19-testing">NYS Dept of Health and NY Times</a>')))
+    ),
+    options = list(
+      dom = "ft",
+      deferRender = TRUE,
+      scrollY = 250,
+      scroller = TRUE,
+      columnDefs = list(
+        list(orderData = 0, targets = 1),
+        list(visible = FALSE, targets = 0),
+        list(className = "dt-head-left", targets = 1)
+        )
+      )
+    ) 
+  # formatStyle(1, fontFamily = "IBM Plex Sans") %>% 
+  # formatStyle(1:ncol(df), fontFamily = "Roboto Mono")
+```
+
+```{r}
+datatable(mtcars)
+```
+
+
