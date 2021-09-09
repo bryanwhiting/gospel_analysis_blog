@@ -345,12 +345,12 @@ g_cnts <- dfg %>%
     pct_word = cnt/n_words,
     pct_para = at_least_one/n_paragraph
     )
-# ggplot(g_cnts, aes(x = date, y = pct_word)) + 
-#   geom_point() + 
-#   geom_line() + 
-#   geom_smooth() + 
-#   labs(title = 'Trend by session in % of words spoken of Christ', y = "") + 
-#   scale_y_continuous(labels = scales::percent, limits = c(.01, .03)) + 
+# ggplot(g_cnts, aes(x = date, y = pct_word)) +
+#   geom_point() +
+#   geom_line() +
+#   geom_smooth() +
+#   labs(title = 'Trend by session in % of words spoken of Christ', y = "") +
+#   scale_y_continuous(labels = scales::percent, limits = c(.01, .03)) +
 #   theme_ga
 
 tmp <- g_cnts %>% select(ds = date, y=pct_word)
