@@ -31,10 +31,12 @@ knitr::opts_chunk$set(
 ```
 
 ```{r load}
-here::i_am(fs::path('_posts', slug, slug, ext='Rmd'))
-pkgs <- c("generalconference", "scriptuRs", "instaquote",
-"dplyr", "gt", "tidytext", "DT", "reactable", "htmltools", "here")
-for(p in pkgs) library(p, character.only = T)
+here::i_am(fs::path("_posts", slug, slug, ext = "Rmd"))
+pkgs <- c(
+  "generalconference", "scriptuRs", "instaquote",
+  "dplyr", "gt", "tidytext", "DT", "reactable", "htmltools", "here"
+)
+for (p in pkgs) library(p, character.only = T)
 source(here("R/ggtheme.R"), local = knitr::knit_global())
 source(here("R/utils.R"), local = knitr::knit_global())
 
@@ -177,12 +179,13 @@ photopost(
   caption = "Christ is referred to by 100 names in The Book of Mormon, which appear 4,500 times.",
   slug = slug,
   name = "names14k",
-  quote=T
+  quote = T
 )
 p
 ```
 
-```{r}
+```{r, eval=F}
+# Plot: 41 %
 text <- insta_text(
   "41%",
   "41% of verses in The Book of Mormon: Another Testament of Jesus Christ have at least one reference to **Jesus Christ**",
@@ -193,9 +196,27 @@ photopost(
   caption = "Nearly every other verse in the Book of Mormon refers to Christ.",
   slug = slug,
   name = "bofm_41pct",
-  quote=T
+  quote = T
 )
 # post(slug, "bofm_41pct")
+
+
+
+# Plot :100 names
+p <- instaquote(
+  text = insta_text(
+    "100",
+    "The number of names for Jesus Christ<br>in The Book of Mormon: Another Testament of Jesus Christ",
+  ), bg_color = colors[4]
+)
+photopost(
+  p,
+  caption = "What's your favorite name for Christ?",
+  slug = slug,
+  name = "christ_100_names",
+  quote = T
+)
+# post(slug, "christ_100_names")
 ```
 
 
@@ -217,7 +238,7 @@ p <- g_cnts %>%
   ggplot(aes(x = year, y = cnt)) +
   geom_bar(stat = "identity", fill = colors[1]) +
   labs(
-    title = 'Prophets speak of Christ',
+    title = "Prophets speak of Christ",
     subtitle = custom_title(
       list(
         c("References to **Christ**", colors[1]),
@@ -226,7 +247,7 @@ p <- g_cnts %>%
     ),
     y = ""
   ) +
-  theme_ga 
+  theme_ga
 
 photopost(
   p,
@@ -254,27 +275,27 @@ g_cnts <- dfg %>%
   mutate(
     cnt = str_count(paragraph, names2),
     at_least_one = cnt > 0
-    ) %>%
+  ) %>%
   filter(year <= 2020) %>%
   group_by(year) %>%
   summarize(
-    cnt = sum(cnt), 
+    cnt = sum(cnt),
     n_words = sum(n_words),
     n_paragraph = n(),
     at_least_one = sum(at_least_one)
-    ) %>%
+  ) %>%
   mutate(
-    pct_word = cnt/n_words,
-    pct_para = at_least_one/n_paragraph
-    )
+    pct_word = cnt / n_words,
+    pct_para = at_least_one / n_paragraph
+  )
 
 p <- g_cnts %>%
   ggplot(aes(x = year, y = pct_word)) +
   geom_line(color = colors[1]) +
   geom_point(color = colors[1]) +
-  geom_smooth(se=F, color=colors[2]) + 
+  geom_smooth(se = F, color = colors[2]) +
   labs(
-    title = 'Prophets are speaking more of Christ!',
+    title = "Prophets are speaking more of Christ!",
     subtitle = custom_title(
       list(
         c("% of words referring to **Christ**", colors[1]),
@@ -284,8 +305,8 @@ p <- g_cnts %>%
     ),
     y = ""
   ) +
-  scale_y_continuous(labels = scales::percent, limits = c(0, .03)) + 
-  theme_ga 
+  scale_y_continuous(labels = scales::percent, limits = c(0, .03)) +
+  theme_ga
 photopost(
   p,
   caption = "Prophets speak more of Christ now than ever",
@@ -305,9 +326,9 @@ p <- g_cnts %>%
   ggplot(aes(x = year, y = pct_para)) +
   geom_line(color = colors[1]) +
   geom_point(color = colors[1]) +
-  geom_smooth(se=F, color=colors[2]) + 
+  geom_smooth(se = F, color = colors[2]) +
   labs(
-    title = 'Prophets are speaking more of Christ!',
+    title = "Prophets are speaking more of Christ!",
     subtitle = custom_title(
       list(
         c("% of paragraphs referring to **Christ**", colors[1]),
@@ -317,8 +338,8 @@ p <- g_cnts %>%
     ),
     y = ""
   ) +
-  scale_y_continuous(labels = scales::percent_format(accuracy=.1), limits = c(.30, .50)) + 
-  theme_ga 
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1), limits = c(.30, .50)) +
+  theme_ga
 photopost(
   p,
   caption = "In 2020, 50% of paragraphs in General Conference talks referred to Christ",
@@ -350,18 +371,18 @@ g_cnts <- dfg %>%
   mutate(
     cnt = str_count(paragraph, names2),
     at_least_one = cnt > 0
-    ) %>%
+  ) %>%
   group_by(date) %>%
   summarize(
-    cnt = sum(cnt), 
+    cnt = sum(cnt),
     n_words = sum(n_words),
     n_paragraph = n(),
     at_least_one = sum(at_least_one)
-    ) %>%
+  ) %>%
   mutate(
-    pct_word = cnt/n_words,
-    pct_para = at_least_one/n_paragraph
-    )
+    pct_word = cnt / n_words,
+    pct_para = at_least_one / n_paragraph
+  )
 # ggplot(g_cnts, aes(x = date, y = pct_word)) +
 #   geom_point() +
 #   geom_line() +
@@ -370,23 +391,23 @@ g_cnts <- dfg %>%
 #   scale_y_continuous(labels = scales::percent, limits = c(.01, .03)) +
 #   theme_ga
 
-tmp <- g_cnts %>% select(ds = date, y=pct_word)
+tmp <- g_cnts %>% select(ds = date, y = pct_word)
 # mod <- prophet(tmp, changepoint.range = )
 mod <- prophet(tmp, changepoint.range = .8)
 # forecast future sessions: https://facebook.github.io/prophet/docs/non-daily_data.html
-future <- make_future_dataframe(mod, periods = 12*4, freq='month') %>%
-  filter(str_detect(as.character(ds), '-04-|-10-'))
+future <- make_future_dataframe(mod, periods = 12 * 4, freq = "month") %>%
+  filter(str_detect(as.character(ds), "-04-|-10-"))
 # tail(future)
 forecast <- predict(mod, future)
 # tail(forecast[c('ds', 'yhat', 'yhat_lower', 'yhat_upper')])
 
-p <- plot(mod, forecast) + add_changepoints_to_plot(mod) + 
+p <- plot(mod, forecast) + add_changepoints_to_plot(mod) +
   labs(
-    title = 'The shift to speaking more of Christ happend 2000-2010',
+    title = "The shift to speaking more of Christ happend 2000-2010",
     subtitle = custom_title(
       list(
-        "% of words referring to **Christ** in each session", 
-        "<br>of conference with", 
+        "% of words referring to **Christ** in each session",
+        "<br>of conference with",
         c("**forecast**", colors[1]),
         "and",
         c("**changepoints**", "red")
@@ -394,17 +415,17 @@ p <- plot(mod, forecast) + add_changepoints_to_plot(mod) +
     ),
     y = ""
   ) +
-  scale_y_continuous(labels = scales::percent_format(accuracy=.1), limits = c(.01, .03)) + 
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1), limits = c(.01, .03)) +
   theme_ga
 p
 photopost(
   p,
   caption = "Prophets are speaking of Christ at an accelerated rate each conference.
-  
-  In 2000, there was a 'break' in the trend compared to before, meaning that authors started referring to Christ more than ever before. Speakers continued to break the trend for several years until 2011 when the 'new trend' was set. 
-  
+
+  In 2000, there was a 'break' in the trend compared to before, meaning that authors started referring to Christ more than ever before. Speakers continued to break the trend for several years until 2011 when the 'new trend' was set.
+
   As you can see, prophets continue to speak more and more of Christ. The blue shade represents a 95% probability band, or in other words, we'd expect that, based on past data, there's a 95% chance that authors would speak of Christ, within this range.
-  
+
   So in April 2020, the max expectation was that authors would refer to Christ 2.25% of
 the time (top of blue band). In reality, they mentioned Him over 2.5% of every word.",
   slug = slug,
@@ -426,17 +447,18 @@ would search for "Jesus" and "Christ" separately, so "Jesus Christ" would
 count as two references.]
 
 ```{r top_talks}
-pure_names = c("Savior|Jesus|Christ")
+pure_names <- c("Savior|Jesus|Christ")
 # str_count("Jesus Christ", pure_names)
 x <- dfg %>%
   mutate(
     cnt = str_count(paragraph, names2),
     jesus_only = str_count(paragraph, pure_names)
-    ) %>%
+  ) %>%
   group_by(title1, author1, date_str, url) %>%
   summarize(
     cnt = sum(cnt),
-    jesus_only = sum(jesus_only)) %>%
+    jesus_only = sum(jesus_only)
+  ) %>%
   ungroup() %>%
   arrange(desc(cnt)) %>%
   mutate(title1 = glue('{author1}, <a href="{url}">{title1}</a>, {date_str}')) %>%
@@ -444,7 +466,8 @@ x <- dfg %>%
   head(20)
 
 datatable(
-  x, escape = F,
+  x,
+  escape = F,
   colnames = c("Talk", "All References to Christ", "References to Savior, Jesus, or Christ")
 )
 ```

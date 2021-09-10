@@ -284,6 +284,9 @@ post <- function(slug, name, msg = NULL) {
     msg <- glue("deploy and post {slug} {name}") %>% as.character()
   }
   deploy(msg)
+  # TODO:
+  # cli::cli_progress_bar()
+  print('sleeping 10 seconds')
   Sys.sleep(10)
   airtable_post(slug, name)
 }
