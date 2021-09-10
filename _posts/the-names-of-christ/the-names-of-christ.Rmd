@@ -195,6 +195,7 @@ photopost(
   name = "bofm_41pct",
   quote=T
 )
+# post(slug, "bofm_41pct")
 ```
 
 
