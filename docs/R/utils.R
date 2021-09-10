@@ -269,3 +269,17 @@ ask <- function(df_text, col, terms, output='dt', n = 200){
     )
   }
 }
+
+# TODO: update zapier so it pulls from png directly
+library(gert)
+deploy <- function(msg){
+  rmarkdown::render_site()
+  system("git add .")
+  system(glue("git commit -am {msg}"))
+  system("git push")
+  # gert::git_add(".")
+  # gert::git_push()
+}
+post <- function(slug, name) {
+  rmarkdown::build_site()
+}

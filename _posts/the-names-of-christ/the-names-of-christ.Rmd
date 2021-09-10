@@ -185,7 +185,7 @@ p
 ```{r}
 text <- insta_text(
   "41%",
-  "The % of verses that have at least one reference to **Jesus Christ** in all the scriptures",
+  "41% of verses in The Book of Mormon: Another Testament of Jesus Christ have at least one reference to **Jesus Christ**",
 )
 p <- instaquote(text, bg_color = colors[2])
 photopost(
