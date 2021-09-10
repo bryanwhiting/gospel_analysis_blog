@@ -182,6 +182,22 @@ photopost(
 p
 ```
 
+```{r}
+text <- insta_text(
+  "41%",
+  "The % of verses that have at least one reference to **Jesus Christ** in all the scriptures",
+)
+p <- instaquote(text, bg_color = colors[2])
+photopost(
+  p,
+  caption = "Nearly every other verse in the Book of Mormon refers to Christ.",
+  slug = slug,
+  name = "bofm_41pct",
+  quote=T
+)
+```
+
+
 ## General Conference References to Christ
 
 If we search for these same names of Christ as used in General
