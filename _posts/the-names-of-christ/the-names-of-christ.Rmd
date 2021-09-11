@@ -201,7 +201,6 @@ photopost(
 # post(slug, "bofm_41pct")
 
 
-
 # Plot :100 names
 p <- instaquote(
   text = insta_text(
@@ -209,12 +208,13 @@ p <- instaquote(
     "The number of names for Jesus Christ<br>in The Book of Mormon: Another Testament of Jesus Christ",
   ), bg_color = colors[4]
 )
-photopost(
-  p,
-  caption = "What's your favorite name for Christ?",
-  slug = slug,
+make_post(
+  plot = p,
+  title = "What's your favorite name for Christ?",
+  body = "Mine is 'Savior'",
+  slug = "the-names-of-christ2",
   name = "christ_100_names",
-  quote = T
+  is_quote = T
 )
 # post(slug, "christ_100_names")
 ```

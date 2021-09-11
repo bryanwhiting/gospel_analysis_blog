@@ -8,7 +8,7 @@ library(ggplot2)
 library(stringr)
 airtable_base <- "applRcAPoTh7RI9O4"
 root_img = here::here("img")
-hashtags = "
+insta_hashtags = "
 __________________________
 📷: www.gospelanalysis.com
 📧: gospelanalysisnow@gmail.com - ask us a question!
@@ -22,6 +22,7 @@ __________________________
 #data #datascience #dataanalytics #datascientist #dataviz
 #religion #faith #faithquotes #faithoverfear
 "
+twitter_hashtags <- "#jesus #christ #faith #religion"
 stopifnot(str_count(hashtags, "#") <= 30)
 
 #' Quote Paragraph
@@ -159,25 +160,23 @@ save_img <- function(img, slug, name, quote){
   }
 }
 
-save_copy <- function(copy, slug, name){
+write_content <- function(content, slug, name, filename){
   dir = glue("{root_img}/{slug}/{name}")
   dir.create(dir, recursive=T, showWarnings=F)
-  copy_path = glue("{dir}/copy.txt")
-  write(x = copy, file = copy_path)
+  copy_path = glue("{dir}/{filename}.txt")
+  write_lines(x = content, file = copy_path)
 }
 
-copy <- function(copy, hashtag){
-  glue("{copy}\n\n{hashtag}")
-}
-
-photopost <- function(p, caption, slug, name, quote=F,hashtag=hashtags){
-  save_img(img=p, slug=slug, name=name, quote=quote)
-  save_copy(copy=copy(caption, hashtags), slug=slug, name=name)
+make_post <- function(plot, title, body, slug, name, is_quote = F){
+  save_img(img=p, slug=slug, name=name, quote=is_quote)
+  stopifnot(str_length(title) <= 200)
+  write_content(content = title, slug = slug, name = name, filename = 'title')
+  write_content(content = body, slug = slug, name = name, filename = 'body')
 }
 
 # airtable_write_copy('the-names-of-christ', 'quote', copy=glue('hello world\n{hashtags}'))
-read_copy <- function(slug, name){
-  path = glue("{root_img}/{slug}/{name}/copy.txt")
+read_content <- function(slug, name, filename){
+  path = glue("{root_img}/{slug}/{name}/{filename}.txt")
   readLines(path) %>%
     paste0(collapse = "\n")
 }
@@ -191,7 +190,8 @@ get_img_files <- function(slug){
     name = basename(d)
     p = file.path("https://www.gospelanalysis.com/img", slug)
     out[[name]]$plot = file.path(p, name, 'plot.png')
-    out[[basename(d)]]$copy = read_copy(slug, name)
+    out[[name]]$title = read_content(slug, name, 'title')
+    out[[name]]$body = read_content(slug, name, 'body')
   }
   out
 }
@@ -216,13 +216,21 @@ airtable_post <- function(slug, name=NULL, tab_name="Scheduled"){
   for(post in post_names){
     slug_name = glue("{slug}-{post}")
     plot_url <- posts[[post]]$plot
-    copy_text <- posts[[post]]$copy
+    copy_title <- posts[[post]]$title
+    copy_body <- posts[[post]]$body
+
+    twitter_copy <- glue("{copy_title} {post_url} {twitter_hashtags}")
+    insta_fb_copy <- glue("{copy_title}\n{post_url}\n{copy_body}\n{insta_hashtags}")
+    post_url <- fs::path("https:://www.gospelanalysis.com/posts", slug)
 
     new_post <- list(
       created_date = now(tz = "US/Pacific"),
       slug_name = slug_name,
-      attachment_url = plot_url,
-      copy = copy_text,
+      post_url = post_url,
+      title = copy_title,
+      twitter_copy = copy_title,
+      insta_fb_copy = insta_fb_copy,
+      img_url = plot_url,
       tagged_users = "@gospelanalysis",
       status = "backlog"
       # TODO: add scheduling (requires premium?)
@@ -233,7 +241,7 @@ airtable_post <- function(slug, name=NULL, tab_name="Scheduled"){
   }
   invisible(resp)
 }
-
+airtable_post('the-names-of-christ2', 'christ_100_names')
 
 
 # SEARCHING FUNCTIONS
@@ -290,3 +298,8 @@ post <- function(slug, name, msg = NULL) {
   Sys.sleep(10)
   airtable_post(slug, name)
 }
+
+# Design:
+# FB: URL in link + hashtags
+# Read more: www.gospelanalysis.com/posts/{slug} - twitter,
+
