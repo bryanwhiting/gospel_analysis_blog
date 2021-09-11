@@ -22,6 +22,7 @@ categories:
 
 
 ```{r setup, include=FALSE}
+slug = 'second-coming'
 knitr::opts_chunk$set(
   echo = FALSE,
   message = FALSE,
@@ -32,16 +33,15 @@ knitr::opts_chunk$set(
 
 
 ```{r}
-library(generalconference)
-library(scriptuRs)
-library(dplyr)
-library(tidytext)
-library(ggplot2)
-# library(rmarkdown)
-library(DT)
-library(htmltools)
-source("/home/rstudio/gospel_analysis_blog/R/ggtheme.R")
-source("/home/rstudio/gospel_analysis_blog/R/utils.R")
+here::i_am(fs::path("_posts", slug, slug, ext = "Rmd"))
+pkgs <- c(
+  "generalconference", "scriptuRs", "instaquote",
+  "dplyr", "gt", "tidytext", "DT", "reactable", "htmltools", "here"
+)
+for (p in pkgs) library(p, character.only = T)
+source(here("R/ggtheme.R"), local = knitr::knit_global())
+source(here("R/utils.R"), local = knitr::knit_global())
+source(here("R/social_media.R"), local = knitr::knit_global())
 
 colors <- palette_pander(10)
 # extrafont::loadfonts() ## to load the font
