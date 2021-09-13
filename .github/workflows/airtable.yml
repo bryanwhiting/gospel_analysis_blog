@@ -29,7 +29,11 @@ jobs:
       - uses: r-lib/actions/setup-r@master
 
       - name: Create .Renviron
-        shell: echo ${{ secrets.AIRTABLE_API_KEY }} >> .Renviron
+        shell: bash
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+        run: |
+          echo "AIRTABLE_API_KEY" >> .Renviron
 
       # - uses: r-lib/actions/setup-pandoc@master
 
