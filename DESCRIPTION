@@ -9,6 +9,7 @@ Imports:
     ggplot2,
     gert,
     gt,
-    here
+    here,
+    stringr
 Remotes:
     bergant/airtabler

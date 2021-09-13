@@ -42,7 +42,7 @@ __________________________
 #religion #faith #faithquotes #faithoverfear
 "
 twitter_hashtags <- "#jesus #christ #faith #religion"
-stopifnot(str_count(insta_hashtags, "#") <= 30)
+stopifnot(stringr::str_count(insta_hashtags, "#") <= 30)
 
 
 save_img <- function(img, slug, name, is_quote = F) {
