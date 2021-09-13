@@ -1,0 +1,11 @@
+Package: gospel_analysis_blog
+Title: Blog
+Version: 0.0.0.9000
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Imports:
+    dplyr,
+    fs,
+    ggplot2
+Remotes:
+    bergant/airtabler

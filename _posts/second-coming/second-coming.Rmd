@@ -187,6 +187,7 @@ make_post(
   name = 'gg_hear_him',
   is_quote = F
 )
+# airtable_post('second-coming', 'gg_hear_him')
 p
 ```
 ```{r eval=F}
