@@ -62,6 +62,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          testthat::test_file('tests/testthat/test-airtable_post.R')
+          source("R/upload_to_airtable.R")
         shell: Rscript {0}
+          # testthat::test_file('tests/testthat/test-airtable_post.R')
 
