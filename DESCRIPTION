@@ -10,6 +10,7 @@ Imports:
     gert,
     gt,
     here,
-    stringr
+    stringr,
+    readr
 Remotes:
     bergant/airtabler

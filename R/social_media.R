@@ -63,7 +63,7 @@ write_content <- function(content, slug, name, filename) {
   dir <- fs::path(root_img, slug, name)
   path <- fs::path(dir, filename, ext = "txt")
   dir.create(dir, recursive = T, showWarnings = F)
-  write_lines(x = content, file = path)
+  readr::write_lines(x = content, file = path)
 }
 
 # airtable_write_copy('the-names-of-christ', 'quote', copy=glue('hello world\n{hashtags}'))

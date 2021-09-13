@@ -54,7 +54,12 @@ jobs:
           remotes::install_cran("dplyr")
           remotes::install_cran("gert")
           remotes::install_cran("stringr")
+          remotes::install_cran("readr")
         shell: Rscript {0}
+
+      - name: Install webshot::install_phantomjs()
+        run: |
+          webshot::install_phantomjs()
 
       - name: Run unit tests
         run: |
