@@ -46,6 +46,11 @@ jobs:
           install.packages("remotes")
           remotes::install_github("bergant/airtabler")
           remotes::install_cran("testthat")
+          remotes::install_cran("here")
+          remotes::install_cran("gt")
+          remotes::install_cran("fs")
+          remotes::install_cran("dplyr")
+          remotes::install_cran("gert")
         shell: Rscript {0}
 
       - name: Run unit tests
