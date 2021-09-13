@@ -55,6 +55,7 @@ jobs:
           remotes::install_cran("gert")
           remotes::install_cran("stringr")
           remotes::install_cran("readr")
+          remotes::install_cran("lubridate")
         shell: Rscript {0}
 
       #- name: Install webshot::install_phantomjs()

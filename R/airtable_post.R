@@ -65,7 +65,7 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
     twitter_copy <- glue::glue("{copy_title} {post_url} {twitter_hashtags}")
 
     new_post <- list(
-      created_date = now(tz = "US/Pacific"),
+      created_date = lubridate::now(tz = "US/Pacific"),
       slug_name = slug_name,
       post_url = post_url,
       title = copy_title,
@@ -78,7 +78,7 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
       # scheduled_datetime = ymd_hms("2021-09-06 16:15:00", tz= "US/Pacific")
     )
     resp <- SocialMediaPosts[[tab_name]]$insert(new_post)
-    msg = glue("Uploaded to airtable: {slug_name}")
+    msg = glue::glue("Uploaded to airtable: {slug_name}")
     cli::cli_alert_success(msg)
   }
   invisible(resp)
