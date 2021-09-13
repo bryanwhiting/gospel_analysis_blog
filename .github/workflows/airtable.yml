@@ -16,24 +16,31 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        r-version: [4.1]
-
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up R ${{ matrix.r-version }}
-        uses: r-lib/actions/setup-r@ffe45a39586f073cc2e9af79c4ba563b657dc6e3
+
+      - uses: r-lib/actions/setup-r@master
+
+      # - uses: r-lib/actions/setup-pandoc@master
+
+      - name: Query dependencies
+        run: |
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        uses: actions/cache@v1
         with:
-          r-version: ${{ matrix.r-version }}
+          path: ${{ env.R_LIBS_USER }}
+          key: macOS-r-3.6-1-${{ hashFiles('depends.Rds') }}
+          restore-keys: macOS-r-3.6-1
+
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "testthat"))
+          install.packages("remotes")
           remotes::install_github("bergant/airtabler")
         shell: Rscript {0}
-        
-      - name: Run unit tests
-        run: |
-          print("hello world")
-        shell: Rscript {0}
+
+      
