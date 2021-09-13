@@ -138,6 +138,12 @@ ask <- function(df_text, col, terms, output='dt', n = 200){
   }
 }
 
+gcp <- function(msg){
+  gert::git_add(files = ".")
+  gert::git_commit_all(message=msg)
+  gert::git_push()
+}
+
 # Design:
 # FB: URL in link + hashtags
 # Read more: www.gospelanalysis.com/posts/{slug} - twitter,
