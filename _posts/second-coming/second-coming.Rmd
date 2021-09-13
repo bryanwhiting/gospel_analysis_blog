@@ -205,6 +205,24 @@ make_post(
   is_quote = T
 )
 
+# Scripture quote
+
+p <- instaquote::instaquote(
+  title = "For they that are wise and have received the truth, and have taken the Holy Spirit for their guide...shall abide the day.",
+  subtitle = "D&C 45:57",
+  bg_color = colors[6],
+  title_size = 20
+)
+make_post(
+  img = p,
+  title = "How do you take the Holy Spirit as your guide?",
+  body = "",
+  slug = slug,
+  name = 'iq_dc4557',
+  is_quote = T
+)
+
+
 ```
 
 

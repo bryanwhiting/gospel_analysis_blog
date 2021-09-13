@@ -45,7 +45,8 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
       tables = c(tab_name)
     )
   # Read posts
-  # scheduled <- SocialMediaPosts[[tab_name]]$select()
+  scheduled <- SocialMediaPosts[[tab_name]]$select()
+  already_uploaded_slugs = unique(scheduled$slug_name)
 
   if (!is.null(name)) {
     post_names <- name
@@ -54,6 +55,9 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
   }
   for (post in post_names) {
     slug_name <- glue::glue("{slug}-{post}")
+    # skip if the slug has already been uploaded
+    if (slug_name %in% already_uploaded_slugs) next
+
     plot_url <- posts[[post]]$plot
     copy_title <- posts[[post]]$title
     copy_body <- posts[[post]]$body
