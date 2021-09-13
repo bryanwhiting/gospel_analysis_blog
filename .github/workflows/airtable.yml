@@ -17,8 +17,8 @@ on:
 jobs:
   build:
     runs-on: macOS-latest
-    # GITHUB_TOKEN is automatically added - no need to add yourself
-    # https://community.rstudio.com/t/gha-failing-to-download-dev-versions-of-packages-with-utils-download-file/113172/2
+    # GITHUB_TOKEN is automatically added - no need to add yourself (see https://docs.github.com/en/actions/reference/authentication-in-a-workflow)
+    # This is needed to install packages from github (see https://community.rstudio.com/t/gha-failing-to-download-dev-versions-of-packages-with-utils-download-file/113172/2)
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -45,7 +45,7 @@ jobs:
         run: |
           install.packages("remotes")
           remotes::install_github("bergant/airtabler")
-          remotes::install_github("testthat")
+          remotes::install_cran("testthat")
         shell: Rscript {0}
 
       - name: Run unit tests
