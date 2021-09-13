@@ -82,7 +82,7 @@ cnt <- dfg %>%
   filter(str_detect(paragraph2, "second coming")) %>%
   count(year)
 # View(cnt)
-cnt %>%
+p <- cnt %>%
   ggplot(aes(x = year, y = n)) +
   geom_bar(stat = "identity", fill = colors[1]) +
   labs(
@@ -98,6 +98,16 @@ cnt %>%
   ) +
   geom_smooth(se = F, color = colors[2]) +
   theme_ga
+
+make_post(
+  img = p,
+  title = "References to Christ's second coming have revived",
+  body = "",
+  slug = slug,
+  name = 'gg_second_coming',
+  is_quote = F
+)
+p 
 ```
 
 
@@ -151,7 +161,7 @@ cnt <- dfg %>%
   count()
 
 # View(cnt)
-cnt %>%
+p <- cnt %>%
   ggplot(aes(x = year, y = n)) +
   geom_bar(stat = "identity", fill = colors[1]) +
   # scale_y_continuous(limits = c(0, 30), breaks = seq(0, 30, by=5))
@@ -168,7 +178,34 @@ cnt %>%
     caption = "*2021 is only halfway over\ngospelanalysis.com",
     y = ""
   )
+
+make_post(
+  img = p,
+  title = "2020 had a theme to 'Hear Him'",
+  body = "It's not uncommon for prophets to invite us to #hearhim. But recently, there's been a surge in the phrase. Perhaps this suggests how important it is to learn to hear the Lord. Perhaps it also reflects that the prophets share their talks and co-inspire given themes.",
+  slug = slug,
+  name = 'gg_hear_him',
+  is_quote = F
+)
+p
 ```
+```{r eval=F}
+p <- instaquote(
+  title = "'Hear Him' was mentioned **28** times in General Conference in 2020",
+  subtitle = NULL,
+  bg_color = colors[5]
+)
+make_post(
+  img = p,
+  title = "28!",
+  body = "",
+  slug = slug,
+  name = 'iq_28',
+  is_quote = T
+)
+
+```
+
 
 So, how will you prepare for His second coming? Perhaps a good place to start
 is to practice [hearing Him](https://www.churchofjesuschrist.org/study/general-conference/2020/04/45nelson?lang=eng.).

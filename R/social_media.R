@@ -122,7 +122,7 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
     post_url <- fs::path("https:://www.gospelanalysis.com/posts", slug)
 
     # Create copy
-    insta_fb_copy <- glue("{copy_title}\n{post_url}\n{copy_body}\n{insta_hashtags}")
+    insta_fb_copy <- glue("{copy_title}\n{copy_body}\nRead more: {post_url}\n{insta_hashtags}")
     twitter_copy <- glue("{copy_title} {post_url} {twitter_hashtags}")
 
     new_post <- list(
