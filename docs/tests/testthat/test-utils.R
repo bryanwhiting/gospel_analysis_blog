@@ -61,19 +61,20 @@ test_that("get_img_files() works", {
   teardown()
 })
 
-test_that("photopost() works", {
+test_that("make_post() works", {
   p <- ggplot2::ggplot()
-  photopost(p, 'hello', slug='test', name='test', hashtag = "#hello")
-  ans <- get_img_files("test")
+  make_post(plot = p, title = "title", body = "body", slug = "test", name = "test", is_quote = F)
+  ans <- get_img_files('test')
   expect_equal(ans$test$plot, "https://www.gospelanalysis.com/img/test/test/plot.png")
-  expect_equal(ans$test$copy, "hello\n\n#hello")
+  expect_equal(ans$test$title, "title")
+  expect_equal(ans$test$body, "body")
   teardown()
 })
 
 test_that("airtable_post() works", {
   p <- ggplot2::ggplot()
-  photopost(p, caption='hello', slug='test', name='test', hashtag = "#hello")
+  photopost(p, caption = "hello", slug = "test", name = "test", hashtag = "#hello")
   posts <- get_img_files("test")
-  ans <- airtable_post("test", tab_name='Testing')
+  ans <- airtable_post("test", tab_name = "Testing")
   expect_equal(ans$fields$attachment_url, "https://www.gospelanalysis.com/img/test/test/plot.png")
 })
