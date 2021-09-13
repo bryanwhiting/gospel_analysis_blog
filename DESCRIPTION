@@ -6,6 +6,7 @@ License: MIT + file LICENSE
 Imports:
     dplyr,
     fs,
-    ggplot2
+    ggplot2,
+    gert
 Remotes:
     bergant/airtabler

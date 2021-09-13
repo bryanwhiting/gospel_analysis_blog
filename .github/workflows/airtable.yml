@@ -17,6 +17,9 @@ on:
 jobs:
   build:
     runs-on: macOS-latest
+    # https://community.rstudio.com/t/gha-failing-to-download-dev-versions-of-packages-with-utils-download-file/113172/2
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
 
@@ -43,4 +46,4 @@ jobs:
           remotes::install_github("bergant/airtabler")
         shell: Rscript {0}
 
-      
+
