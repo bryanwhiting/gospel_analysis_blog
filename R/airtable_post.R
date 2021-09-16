@@ -105,6 +105,7 @@ airtable_backlog_to_scheduled <- function() {
   # Move from backlog to scheduled, delete off backlog
   stopifnot(nrow(backlog1) == 1)
   inserted <- SocialMediaPosts[['Scheduled']]$insert(backlog1)
-  SocialMediaPosts[['Backlog']]$delete(backlog1_id)
+  # don't delete from backlog
+  # SocialMediaPosts[['Backlog']]$delete(backlog1_id)
 }
 
