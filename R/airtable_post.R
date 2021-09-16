@@ -98,16 +98,17 @@ airtable_backlog_to_scheduled <- function() {
     )
   backlog <- SocialMediaPosts[['Backlog']]$select() %>%
     arrange(desc(created_date))
+  if(nrow(backlog > 0)){
+    backlog1 <- backlog %>% head(1)
+    backlog1_id <- backlog1$id
+    backlog1 <- backlog1 %>% select(-id, -createdTime, -last_modified)
 
-  backlog1 <- backlog %>% head(1)
-  backlog1_id <- backlog1$id
-  backlog1 <- backlog1 %>% select(-id, -createdTime, -last_modified)
 
-
-  # Move from backlog to scheduled, delete off backlog
-  stopifnot(nrow(backlog1) == 1)
-  inserted <- SocialMediaPosts[['Scheduled']]$insert(backlog1)
-  # don't delete from backlog
-  # SocialMediaPosts[['Backlog']]$delete(backlog1_id)
+    # Move from backlog to scheduled, delete off backlog
+    stopifnot(nrow(backlog1) == 1)
+    inserted <- SocialMediaPosts[['Scheduled']]$insert(backlog1)
+    # don't delete from backlog
+    # SocialMediaPosts[['Backlog']]$delete(backlog1_id)
+  }
 }
 
