@@ -1,0 +1,77 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+#
+# See https://github.com/r-lib/actions/tree/master/examples#readme for
+# additional example workflows available for the R community.
+
+name: R
+
+on:
+  push:
+    branches: [ master ]
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 17 * * *'
+
+jobs:
+  build:
+    runs-on: macOS-latest
+    # GITHUB_TOKEN is automatically added - no need to add yourself (see https://docs.github.com/en/actions/reference/authentication-in-a-workflow)
+    # This is needed to install packages from github (see https://community.rstudio.com/t/gha-failing-to-download-dev-versions-of-packages-with-utils-download-file/113172/2)
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      # following steps of gt: https://github.com/rstudio/gt/blob/master/.github/workflows/pkgdown.yaml
+      # https://github.com/rstudio/gt/blob/master/.github/workflows/R-CMD-check.yaml
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-r@master
+
+      - name: Create .Renviron
+        shell: bash
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+        run: |
+          echo "AIRTABLE_API_KEY=$AIRTABLE_API_KEY" >> .Renviron
+
+      # - uses: r-lib/actions/setup-pandoc@master
+
+      - name: Query dependencies
+        run: |
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: macOS-r-3.6-1-${{ hashFiles('depends.Rds') }}
+          restore-keys: macOS-r-3.6-1
+
+      - name: Install dependencies
+        run: |
+          install.packages("remotes")
+          remotes::install_github("bergant/airtabler")
+          remotes::install_cran("testthat")
+          remotes::install_cran("here")
+          remotes::install_cran("gt")
+          remotes::install_cran("fs")
+          remotes::install_cran("dplyr")
+          remotes::install_cran("gert")
+          remotes::install_cran("stringr")
+          remotes::install_cran("readr")
+          remotes::install_cran("lubridate")
+        shell: Rscript {0}
+
+      #- name: Install webshot::install_phantomjs()
+      #  run: webshot::install_phantomjs()
+
+      - name: Run unit tests
+        run: |
+          source("R/airtable_scheduler.R")
+        shell: Rscript {0}
+          # testthat::test_file('tests/testthat/test-airtable_post.R')
+
