@@ -5,7 +5,7 @@ source(here::here("R/airtable_post.R"))
 # fs::dir_ls(here::here('img'))
 all_slugs <- list.dirs(here::here('img'), recursive = F) %>%
   basename()
-for(s in slug){
-  airtable_post(s)
+for(slug in all_slugs){
+  airtable_post(slug)
 }
 
