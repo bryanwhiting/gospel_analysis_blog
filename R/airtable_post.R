@@ -85,7 +85,9 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
     msg = glue::glue("Uploaded to airtable: {slug_name}")
     cli::cli_alert_success(msg)
   }
-  invisible(resp)
+  if(exists('resp')){
+    invisible(resp)
+  }
 }
 
 airtable_backlog_to_scheduled <- function() {
