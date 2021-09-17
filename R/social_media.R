@@ -23,6 +23,7 @@
 #
 # Airtable:
 # for each name in get_files()$list, upload image + copy
+root_img <- here::here("img")
 
 # TODO: hide this in a yaml file
 save_img <- function(img, slug, name, is_quote = F) {

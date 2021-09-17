@@ -39,6 +39,7 @@ pkgs <- c(
 for (p in pkgs) library(p, character.only = T)
 source(here("R/ggtheme.R"), local = knitr::knit_global())
 source(here("R/utils.R"), local = knitr::knit_global())
+source(here("R/social_media.R"), local = knitr::knit_global())
 
 colors <- palette_pander(10)
 # extrafont::loadfonts() ## to load the font
@@ -107,7 +108,7 @@ s_cnts <- dfs %>%
   mutate(cnt = str_count(text, names_str)) %>%
   select(volume_title, text, cnt)
 
-s_cnts %>%
+tab <- s_cnts %>%
   mutate(at_least_one = cnt > 0) %>%
   group_by(volume_title) %>%
   summarize(
@@ -162,6 +163,15 @@ s_cnts %>%
       rows = everything()
     )
   )
+make_post(
+  img = tab,
+  title = "References to Christ by scripture volume",
+  body = "Book of Mormon references chrsit 41% of all verses. The Pearl of Great Prices refers to Christ even more, at 57% of all verses.",
+  slug = slug,
+  name = 'tab_christ_counts',
+  is_quote = F
+)
+tab
 ```
 
 The Book of Mormon has more references to Christ than the other Testaments, but the Pearl of Great Price references the Savior the most.
@@ -169,50 +179,49 @@ The Book of Mormon has more references to Christ than the other Testaments, but 
 How powerful that a whopping 41% of verses in the Book of Mormon refer to Christ! If you read just five verses, two of them are bound to inspire you to think of Him.
 
 ```{r quote, fig.width = 3, fig.height = 3, fig.align = 'center'}
-text <- insta_text(
-  "14,816",
-  "The number of references to **Jesus Christ** in all the scriptures"
-)
-p <- instaquote(text)
-photopost(
+p <- instaquote(
+  title =  "14,816",
+  subtitle = "The number of references to **Jesus Christ** in all the scriptures")
+
+make_post(
   p,
-  caption = "Christ is referred to by 100 names in The Book of Mormon, which appear 4,500 times.",
+  title = "Christ is referred to by 100 names in The Book of Mormon, which appear 4,500 times.",
+  body = "",
   slug = slug,
   name = "names14k",
-  quote = T
+  is_quote = T
 )
 p
 ```
 
 ```{r, eval=F}
 # Plot: 41 %
-text <- insta_text(
-  "41%",
-  "41% of verses in The Book of Mormon: Another Testament of Jesus Christ have at least one reference to **Jesus Christ**",
-)
-p <- instaquote(text, bg_color = colors[2])
-photopost(
+p <- instaquote(
+  title = "41%",
+  subtitle =  "41% of verses in The Book of Mormon: Another Testament of Jesus Christ have at least one reference to **Jesus Christ**",
+  bg_color = colors[2])
+make_post(
   p,
-  caption = "Nearly every other verse in the Book of Mormon refers to Christ.",
+  title = "Nearly every other verse in the Book of Mormon refers to Christ.",
+  body = "",
   slug = slug,
   name = "bofm_41pct",
-  quote = T
+  is_quote = T
 )
 # post(slug, "bofm_41pct")
 
 
 # Plot :100 names
 p <- instaquote(
-  text = insta_text(
-    "100",
-    "The number of names for Jesus Christ<br>in The Book of Mormon: Another Testament of Jesus Christ",
-  ), bg_color = colors[4]
+  title = "100",
+  subtitle = "The number of names for Jesus Christ<br>in The Book of Mormon: Another Testament of Jesus Christ",
+  bg_color = colors[4]
 )
 make_post(
-  plot = p,
+  img = p,
   title = "What's your favorite name for Christ?",
   body = "Mine is 'Savior'",
-  slug = "the-names-of-christ2",
+  slug = slug,
   name = "christ_100_names",
   is_quote = T
 )
@@ -249,9 +258,10 @@ p <- g_cnts %>%
   ) +
   theme_ga
 
-photopost(
+make_post(
   p,
-  caption = "Thousands...",
+  title = "Thousands...",
+  body = "",
   slug = slug,
   name = "gc_cnts"
 )
@@ -307,9 +317,10 @@ p <- g_cnts %>%
   ) +
   scale_y_continuous(labels = scales::percent, limits = c(0, .03)) +
   theme_ga
-photopost(
+make_post(
   p,
-  caption = "Prophets speak more of Christ now than ever",
+  title = "Prophets speak more of Christ now than ever",
+  body = "",
   slug = slug,
   name = "pct_cnts"
 )
@@ -328,7 +339,7 @@ p <- g_cnts %>%
   geom_point(color = colors[1]) +
   geom_smooth(se = F, color = colors[2]) +
   labs(
-    title = "Prophets are speaking more of Christ!",
+    title = "50% of Gen Conf Paragraphs refer to Christ now",
     subtitle = custom_title(
       list(
         c("% of paragraphs referring to **Christ**", colors[1]),
@@ -340,9 +351,10 @@ p <- g_cnts %>%
   ) +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1), limits = c(.30, .50)) +
   theme_ga
-photopost(
+make_post(
   p,
-  caption = "In 2020, 50% of paragraphs in General Conference talks referred to Christ",
+  title = "In 2020, 50% of paragraphs in General Conference talks referred to Christ",
+  body = "",
   slug = slug,
   name = "pct_paragraphs"
 )
@@ -418,11 +430,10 @@ p <- plot(mod, forecast) + add_changepoints_to_plot(mod) +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1), limits = c(.01, .03)) +
   theme_ga
 p
-photopost(
+make_post(
   p,
-  caption = "Prophets are speaking of Christ at an accelerated rate each conference.
-
-  In 2000, there was a 'break' in the trend compared to before, meaning that authors started referring to Christ more than ever before. Speakers continued to break the trend for several years until 2011 when the 'new trend' was set.
+  title = "Prophets are speaking of Christ at an accelerated rate each conference.",
+  body = "In 2000, there was a 'break' in the trend compared to before, meaning that authors started referring to Christ more than ever before. Speakers continued to break the trend for several years until 2011 when the 'new trend' was set.
 
   As you can see, prophets continue to speak more and more of Christ. The blue shade represents a 95% probability band, or in other words, we'd expect that, based on past data, there's a 95% chance that authors would speak of Christ, within this range.
 

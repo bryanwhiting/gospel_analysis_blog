@@ -42,11 +42,12 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
   SocialMediaPosts <-
     airtabler::airtable(
       base = airtable_base,
-      tables = c(tab_name)
+      tables = c("Scheduled", "Backlog")
     )
   # Read posts
   scheduled <- SocialMediaPosts[[tab_name]]$select()
-  already_uploaded_slugs = unique(scheduled$slug_name)
+  backlog <- SocialMediaPosts[['Backlog']]$select()
+  already_uploaded_slugs = unique(c(scheduled$slug_name, backlog$slug_name))
 
   if (!is.null(name)) {
     post_names <- name
@@ -107,8 +108,7 @@ airtable_backlog_to_scheduled <- function() {
     # Move from backlog to scheduled, delete off backlog
     stopifnot(nrow(backlog1) == 1)
     inserted <- SocialMediaPosts[['Scheduled']]$insert(backlog1)
-    # don't delete from backlog
-    # SocialMediaPosts[['Backlog']]$delete(backlog1_id)
+    SocialMediaPosts[['Backlog']]$delete(backlog1_id)
   }
 }
 

@@ -62,8 +62,24 @@ dfs <- lds_scriptures() %>%
 ```
 
 # Ask
+
 ```{r}
 dfs %>% 
     select(volume_long_title, text_w_ref) %>%
-    ask(text_w_ref, 'ask', n = 500)
+    filter(str_detect(text_w_ref, "give|receiv")) %>%
+    ask(text_w_ref, 'ask ', n = 500) 
+    
+p <- instaquote(
+  title = "Whatsoever thou wilt ask of god, god will give it thee.",
+  subtitle = "Mark 6:23",
+  title_size = 20
+)
+make_post(
+  img = p,
+  title = "64 times in the scriptures appears the words 'ask' with 'give'",
+  body = "",
+  slug = slug,
+  name = 'iq_ask64give',
+  is_quote = T
+)
 ```
