@@ -34,7 +34,7 @@ get_img_files <- function(slug) {
 }
 
 
-airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
+airtable_post <- function(slug, name = NULL) {
   # specify name if you want to only upload one
   # tab_name = "Testing"
   posts <- get_img_files(slug)
@@ -45,7 +45,7 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
       tables = c("Scheduled", "Backlog")
     )
   # Read posts
-  scheduled <- SocialMediaPosts[[tab_name]]$select()
+  scheduled <- SocialMediaPosts[["Scheduled"]]$select()
   backlog <- SocialMediaPosts[['Backlog']]$select()
   already_uploaded_slugs = unique(c(scheduled$slug_name, backlog$slug_name))
 
@@ -82,7 +82,7 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
       # TODO: add scheduling (requires premium?)
       # scheduled_datetime = ymd_hms("2021-09-06 16:15:00", tz= "US/Pacific")
     )
-    resp <- SocialMediaPosts[[tab_name]]$insert(new_post)
+    resp <- SocialMediaPosts[["Backlog"]]$insert(new_post)
     msg = glue::glue("Uploaded to airtable: {slug_name}")
     cli::cli_alert_success(msg)
   }
