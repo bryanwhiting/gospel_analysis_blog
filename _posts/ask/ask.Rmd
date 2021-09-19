@@ -20,7 +20,7 @@ categories:
 
 
 ```{r setup, include=FALSE}
-slug <- "the-names-of-christ" # basename(getwd())
+slug <- "ask" # basename(getwd())
 knitr::opts_chunk$set(
   echo = FALSE,
   message = FALSE,
@@ -67,8 +67,8 @@ dfs <- lds_scriptures() %>%
 dfs %>% 
     select(volume_long_title, text_w_ref) %>%
     filter(str_detect(text_w_ref, "give|receiv")) %>%
-    ask(text_w_ref, 'ask ', n = 500) 
-    
+    ask(text_w_ref, 'ask', n = 500) 
+
 p <- instaquote(
   title = "Whatsoever thou wilt ask of god, god will give it thee.",
   subtitle = "Mark 6:23",

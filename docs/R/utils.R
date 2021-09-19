@@ -45,24 +45,7 @@ quote_verse <- function(df, phrase = "xxxx") {
 }
 
 
-datatable_quotes <- function(df, n = 20, phrases="xxxx") {
-
-  df <- df %>%
-    head(n) %>%
-    select(pquote)
-
-  # could have multiple phrases: hear Him, Hear Him, hear him
-  for (p in phrases){
-    df <- df %>%
-    mutate(
-      pquote = str_replace(
-        pquote,
-        p,
-        # glue('<strong style="color:{colors[1]}">{p}</strong>')
-        glue('<strong>{p}</strong>')
-      )
-    )
-  }
+my_datatable <- function(df){
   df %>%
     datatable(
       class = "compact hover",
@@ -104,6 +87,29 @@ datatable_quotes <- function(df, n = 20, phrases="xxxx") {
       `font-size` = "14px")
 }
 
+
+datatable_quotes <- function(df, n = 20, phrases="xxxx") {
+
+  df <- df %>%
+    head(n) %>%
+    select(pquote)
+
+  # could have multiple phrases: hear Him, Hear Him, hear him
+  for (p in phrases){
+    df <- df %>%
+    mutate(
+      pquote = str_replace(
+        pquote,
+        p,
+        # glue('<strong style="color:{colors[1]}">{p}</strong>')
+        glue('<strong>{p}</strong>')
+      )
+    )
+  }
+  df %>%
+    my_datatable()
+}
+
 # SEARCHING FUNCTIONS
 ask <- function(df_text, col, terms, output='dt', n = 200){
   # varname <- deparse(substitute(col))
@@ -131,10 +137,34 @@ ask <- function(df_text, col, terms, output='dt', n = 200){
   if (output == 'view'){
     View(x)
   } else {
-    DT::datatable(
+    datatable(
       x,
-      escape=F
-    )
+      class = "compact hover",
+      extensions = c("Scroller"),
+      escape = F,
+      caption = tags$caption(
+        style = 'caption-side: bottom;',
+        withTags(div(HTML('Source: <a href="https://www.churchofjesuschrist.org/study/general-conference">The Church of Jesus Christ of Latter-day Saints</a>')))
+      ),
+      filter = 'top',
+      options = list(
+        # dom = "ftp",
+        # deferRender = TRUE,
+        scrollY = 250,
+        # scrollX = F,
+        # scroller = TRUE,
+        search = list(regex = T),
+        pageLength=200,
+        # idea copied: https://glin.github.io/reactable/articles/examples.html#language-options
+        language = list(paginate = list(
+          `first` = "\u276e",
+          `previous` = "\u276e",
+          `next` = "\u276f"))
+      )
+    ) %>%
+      # formatStyle(1, fontFamily = "IBM Plex Sans") %>%
+      # formatStyle(1:ncol(df), fontFamily = "Roboto Mono")
+      formatStyle(1:ncol(df), fontFamily = "IBM Plex Sans")
   }
 }
 

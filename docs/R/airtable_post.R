@@ -34,7 +34,7 @@ get_img_files <- function(slug) {
 }
 
 
-airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
+airtable_post <- function(slug, name = NULL) {
   # specify name if you want to only upload one
   # tab_name = "Testing"
   posts <- get_img_files(slug)
@@ -42,11 +42,12 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
   SocialMediaPosts <-
     airtabler::airtable(
       base = airtable_base,
-      tables = c(tab_name)
+      tables = c("Scheduled", "Backlog")
     )
   # Read posts
-  scheduled <- SocialMediaPosts[[tab_name]]$select()
-  already_uploaded_slugs = unique(scheduled$slug_name)
+  scheduled <- SocialMediaPosts[["Scheduled"]]$select()
+  backlog <- SocialMediaPosts[['Backlog']]$select()
+  already_uploaded_slugs = unique(c(scheduled$slug_name, backlog$slug_name))
 
   if (!is.null(name)) {
     post_names <- name
@@ -62,7 +63,7 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
     copy_title <- posts[[post]]$title
     copy_body <- posts[[post]]$body
 
-    post_url <- fs::path("https:://www.gospelanalysis.com/posts", slug)
+    post_url <- fs::path("https://www.gospelanalysis.com/posts", slug)
 
     # Create copy
     insta_fb_copy <- glue::glue("{copy_title}\n{copy_body}\nRead more: {post_url}\n{insta_hashtags}")
@@ -81,9 +82,34 @@ airtable_post <- function(slug, name = NULL, tab_name = "Scheduled") {
       # TODO: add scheduling (requires premium?)
       # scheduled_datetime = ymd_hms("2021-09-06 16:15:00", tz= "US/Pacific")
     )
-    resp <- SocialMediaPosts[[tab_name]]$insert(new_post)
+    resp <- SocialMediaPosts[["Backlog"]]$insert(new_post)
     msg = glue::glue("Uploaded to airtable: {slug_name}")
     cli::cli_alert_success(msg)
   }
-  invisible(resp)
+  if(exists('resp')){
+    invisible(resp)
+  }
 }
+
+
+airtable_backlog_to_scheduled <- function() {
+  SocialMediaPosts <-
+    airtabler::airtable(
+      base = airtable_base,
+      tables = c('Backlog', 'Scheduled')
+    )
+  backlog <- SocialMediaPosts[['Backlog']]$select() %>%
+    arrange(desc(created_date))
+  if(nrow(backlog > 0)){
+    backlog1 <- backlog %>% head(1)
+    backlog1_id <- backlog1$id
+    backlog1 <- backlog1 %>% select(-id, -createdTime, -last_modified)
+
+
+    # Move from backlog to scheduled, delete off backlog
+    stopifnot(nrow(backlog1) == 1)
+    inserted <- SocialMediaPosts[['Scheduled']]$insert(backlog1)
+    SocialMediaPosts[['Backlog']]$delete(backlog1_id)
+  }
+}
+

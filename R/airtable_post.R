@@ -63,7 +63,7 @@ airtable_post <- function(slug, name = NULL) {
     copy_title <- posts[[post]]$title
     copy_body <- posts[[post]]$body
 
-    post_url <- fs::path("https:://www.gospelanalysis.com/posts", slug)
+    post_url <- fs::path("https://www.gospelanalysis.com/posts", slug)
 
     # Create copy
     insta_fb_copy <- glue::glue("{copy_title}\n{copy_body}\nRead more: {post_url}\n{insta_hashtags}")
