@@ -1,0 +1,109 @@
+---
+title: "Prophet"
+description: |
+  "Wherefore, we search the prophets" - Jacob 4:6.
+author:
+  - name: Bryan Whiting
+    url: https://www.bryanwhiting.com
+date: 2021-10-02
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+    toc_depth: 3
+categories:
+   - general conference
+   - scriptures
+   - jesus christ
+---
+
+
+```{r setup, include=FALSE}
+slug <- "prophets" # basename(getwd())
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+
+```{r load}
+here::i_am(fs::path("_posts", slug, slug, ext = "Rmd"))
+pkgs <- c(
+  "generalconference", "scriptuRs", "instaquote",
+  "dplyr", "gt", "tidytext", "DT", "reactable", "htmltools", "here"
+)
+for (p in pkgs) library(p, character.only = T)
+source(here("R/ggtheme.R"), local = knitr::knit_global())
+source(here("R/utils.R"), local = knitr::knit_global())
+source(here("R/social_media.R"), local = knitr::knit_global())
+
+colors <- palette_pander(10)
+# extrafont::loadfonts() ## to load the font
+options(max.print = 1000)
+data("genconf")
+dfg <- genconf %>%
+  unnest(sessions) %>%
+  unnest(talks) %>%
+  unnest(paragraphs) %>%
+  mutate(
+    paragraph2 = tolower(paragraph),
+    date_str = date %>% format("%b %Y"),
+    deep_link = glue("{url}.{p_id}?lang=eng#{p_id}"),
+    p_href = glue('{author1} <a href="{deep_link}">{title1}</a>, {date_str}'),
+    pquote = glue("{paragraph}<br>{p_href}"),
+    # https://stackoverflow.com/a/26406796
+    n_words = str_count(paragraph2, "\\S+")
+  )
+
+dfs <- lds_scriptures() %>%
+  mutate(text2 = tolower(text))
+```
+
+```{r}
+p <- instaquote(
+  title = "We search the prophets",
+  subtitle = "Jacob 4\\:6"
+)
+make_post(
+  img = p,
+  title = "How do you search the prophets?",
+  body = "I've been pondering this powerful phrase, and the more I do, the more I come to appreciate the Lord's constant invitation to search, ask, and find.
+  
+  Disciples of Christ are those who seek. Yearn for truth. Not just in religious matters, but all matters.",
+  slug=slug,
+  name='jacob4_6',
+  is_quote=TRUE
+)
+p
+```
+
+I've been pondering this powerful phrase; the more I do, the more I come to appreciate the Lord's constant invitation to search, ask, and find.
+
+Disciples of Christ are those who seek. Who yearn for truth. Not just in religious matters but all matters.
+
+Jacob continues his discourse with another compelling insight:
+
+```{r}
+p <- instaquote(
+  title = "No man knoweth of his ways save it be revealed unto him",
+  subtitle = "Jacob 4:8",
+  bg_color = colors[2]
+)
+make_post(
+  img = p,
+  title = "There's only one way to know God.",
+  body = "And by the power of the Holy Ghost ye may know the truth of all things. Moroni 10:4-5",
+  slug = slug,
+  name = 'jacob4_8',
+  is_quote=TRUE
+)
+p
+```
+
+How powerful: the only way to know His ways is by revelation. Moroni echos this testimony:
+
+> And by the power of the Holy Ghost ye may know the truth of all things. [Moroni 10:4-5](https://www.churchofjesuschrist.org/study/scriptures/bofm/moro/10?lang=eng)
+
+How have you come to know God?

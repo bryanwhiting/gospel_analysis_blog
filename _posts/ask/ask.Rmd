@@ -29,6 +29,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r load}
+View(mtcars)
+plot(x, y, ...)
 here::i_am(fs::path("_posts", slug, slug, ext = "Rmd"))
 pkgs <- c(
   "generalconference", "scriptuRs", "instaquote",
