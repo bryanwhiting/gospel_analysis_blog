@@ -1,5 +1,5 @@
 ---
-title: "Prophet"
+title: "Learning Truth form Prophets"
 description: |
   "Wherefore, we search the prophets" - Jacob 4:6.
 author:
@@ -12,9 +12,8 @@ output:
     toc: true
     toc_depth: 3
 categories:
-   - general conference
    - scriptures
-   - jesus christ
+   - prophets
 ---
 
 
