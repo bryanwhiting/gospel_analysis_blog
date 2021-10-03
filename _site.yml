@@ -12,10 +12,16 @@ twitter:
 favicon: img/names14k_favicon.png
 navbar:
   right:
-    - text: "Home"
+    - text: "Blog"
       href: index.html
     - text: "About"
       href: about.html
+    - icon: fa fa-instagram
+      href: https://www.instagram.com/gospelanalysis/
+    - icon: fa fa-twitter
+      href: https://twitter.com/gospelanalysis
+    - icon: fa fa-facebook
+      href: https://www.facebook.com/Gospel-Analysis-109208094832608
     - icon: fa fa-rss
       href: index.xml
 output: distill::distill_article
