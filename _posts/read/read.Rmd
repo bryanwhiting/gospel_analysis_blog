@@ -1,0 +1,252 @@
+---
+title: "'Read the Book of Mormon Daily'"
+description: |
+  Is it just modern counsel?
+author:
+  - name: Bryan Whiting
+    url: https://www.bryanwhiting.com
+date: 2021-10-04
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+    toc_depth: 3
+categories:
+  - general conference
+  - book of mormon
+  - word trends
+---
+
+```{r setup, include=FALSE}
+slug <- "read" # basename(getwd())
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+```{r load}
+here::i_am(fs::path("_posts", slug, slug, ext = "Rmd"))
+pkgs <- c(
+  "generalconference", "scriptuRs", "instaquote",
+  "dplyr", "gt", "tidytext", "DT", "reactable", "htmltools", "here"
+)
+for (p in pkgs) library(p, character.only = T)
+source(here("R/ggtheme.R"), local = knitr::knit_global())
+source(here("R/utils.R"), local = knitr::knit_global())
+source(here("R/social_media.R"), local = knitr::knit_global())
+
+colors <- palette_pander(10)
+# extrafont::loadfonts() ## to load the font
+options(max.print = 1000)
+data("genconf")
+dfg <- genconf %>%
+  unnest(sessions) %>%
+  unnest(talks) %>%
+  unnest(paragraphs) %>%
+  mutate(
+    paragraph2 = tolower(paragraph),
+    date_str = date %>% format("%b %Y"),
+    deep_link = glue("{url}.{p_id}?lang=eng#{p_id}"),
+    p_href = glue('{author1} <a href="{deep_link}">{title1}</a>, {date_str}'),
+    pquote = glue("{paragraph}<br>{p_href}"),
+    # https://stackoverflow.com/a/26406796
+    n_words = str_count(paragraph2, "\\S+")
+  )
+
+dfs <- lds_scriptures() %>%
+  mutate(text2 = tolower(text),
+    quote = glue("{text} ({verse_title})")
+ )
+```
+
+## "Read" in the Scriptures
+
+```{r read}
+p <- instaquote(
+  title = "they came down ... and gave unto him a book, and bade him that he should read.",
+  subtitle = "1 Nephi 1:11",
+  bg_color = colors[7]
+)
+make_post(
+  img = p,
+  title = "The Book of Mormon starts with an invitation to read.",
+  body = "",
+  slug = slug,
+  name = '1ne1_11',
+  is_quote = F
+)
+p
+
+# Stats
+# dfs %>%
+#   filter(str_detect(text2, 'read')) %>%
+#   count()
+
+# dfs %>%
+#   filter(str_detect(text2, 'read')) %>%
+#   count()
+# dfs %>%
+#   filter(volume_short_title == 'BoM') %>%
+#   filter(str_detect(text2, 'read')) %>%
+#   count()
+```
+
+The word **read** appears 1,026 times in the scriptures, with 135 appearances in the Book of Mormon. Isn't it interesting that the first chapter
+and the last chapter of the Book of Mormon both talk about reading? 1 Nephi tells us about Lehi sharing a vision he had, where he was invited to read a book of scripture by angels. And Moroni 10 tells us to ponder the Book of Mormon and pray to know if it's true.
+
+Here's a verse in the first chapter:
+
+```{r, results='asis'}
+dfs %>% 
+  filter(verse_title == "1 Nephi 1:11") %>% 
+  quote_verse('read')
+```
+
+And an invitation in the last chapter:
+
+```{r include=F, eval=F}
+dfs %>% 
+  filter(verse_title == "Moroni 10:4") %>% 
+  quote_verse()
+```
+
+> Behold, I would exhort you that when ye shall **read** these things, if it be wisdom in God that ye should read them, that ye would remember how merciful the Lord hath been unto the children of men, from the creation of Adam even down until the time that ye shall receive these things, and ponder it in your hearts. 
+> And when ye shall **receive** these things, I would exhort you that ye would ask God, the Eternal Father, in the name of Christ, if these things are not true; and if ye shall ask with a sincere heart, with real intent, having faith in Christ, he will manifest the truth of it unto you, by the power of the Holy Ghost. (Moroni 10:4-5) 
+
+Consider the power of this: the Book of Mormon is an inspired text. It was received
+by revelation by the prophets who wrote it, and those same prophets encourage
+us to receive revelation for ourselves. This is so vital, in fact, that
+the prophets in the scriptures offer deep warnings about _not_ reading scriptures:
+
+```{r, results='asis'}
+dfs %>% 
+  filter(str_detect(text2, "wrest them")) %>% 
+  quote_verse('if ye will wrest them')
+
+dfs %>% 
+  filter(str_detect(text2, "wrest the scriptures")) %>% 
+  quote_verse('wrest')
+```
+
+To unbelievers, prophets in the scriptures have often asked, "have ye not read?":
+
+```{r}
+dfs %>% 
+  filter(str_detect(text2, "have ye not read")) %>% 
+  select(quote) %>%
+  my_datatable()
+  # quote_verse('if ye will wrest them')
+```
+
+Clearly the Lord gives us scriptures and expects us to read them and understand them. How do we understand them? By the Holy Ghost.
+
+
+```{r, results='asis'}
+dfs %>% 
+  filter(verse_title == "Moroni 10:5") %>% 
+  quote_verse()
+```
+
+## Modern Prophets Invite Us to Read Daily
+
+Since the dawn of the Restored church, prophets have spoken of the power of
+the Book of Mormon, starting with Joseph Smith:
+
+> the Book of mormon was the most correct of any book on earth, and the keystone 
+of our religion, and a man would get nearer to God by abiding by its precepts, than by
+any other book. - Joseph Smith, Introduction to the Book of Mormon
+
+```{r, include=F, eval=F}
+dfg %>%
+  filter(str_detect(paragraph2, 'book of mormon')) %>%
+  filter(str_detect(paragraph2, 'immerse|feast|read|study|ponder')) %>%
+  filter(str_detect(paragraph2, 'every day|each day|daily')) %>%
+  filter(year <= 1972) %>%
+  pull(pquote)
+```
+
+The earliest invitation in our 1971-2020 corpus is by Loren C. Dunn in April, 1971:
+
+> I asked them if in the next three months they would resolve to keep themselves morally clean and in harmony with the principles of virtue which the Savior taught. They said they would. And then **I suggested they establish a schedule, on their own, during the next three months to read the Book of Mormon from cover to cover—a few pages each day**, with a prayer at each reading that the Lord would bless them to know if the book is true and actually from him. They agreed.<br>Loren C. Dunn <a href="https://www.churchofjesuschrist.org/study/general-conference/1971/04/drink-of-the-pure-water.p39?lang=eng#p39">Drink of the Pure Water</a>, Apr 1971
+
+In 1986, there were 59 references to the Book of Mormon with additional mention of 
+words like "read", "study", or "ponder. 5 of these references called to read
+the Book of Mormon daily:
+
+```{r}
+n_bofm <- dfg %>%
+  filter(str_detect(paragraph2, 'book of mormon')) %>%
+  filter(str_detect(paragraph2, 'immerse|feast|read|study|ponder')) %>%
+  count(year) %>%
+  rename(read=n)
+
+n_daily <- dfg %>%
+  filter(str_detect(paragraph2, 'book of mormon')) %>%
+  filter(str_detect(paragraph2, 'immerse|feast|read|study|ponder')) %>%
+  filter(str_detect(paragraph2, 'every day|each day|daily')) %>%
+  count(year) %>%
+  rename(day = n)
+  # select(pquote) %>%
+  # ask(pquote, terms=c(' da'))
+
+p <- n_bofm %>%
+  left_join(n_daily) %>%
+  mutate(day = replace_na(day, 0)) %>%
+  mutate(read = read - day) %>%
+  pivot_longer(-year) %>%
+  ggplot(aes(x = year, y = value, color=name, fill=name)) + 
+  geom_bar(stat='identity') +
+  theme_ga + 
+  labs(
+    title = 'Prophets Encourage: Read the Book of Mormon Daily',
+    subtitle = custom_title(
+      list(
+        c("References to read", colors[2]),
+        "the Book of Mormon and",
+        c("references to **read daily**", colors[1])
+      )
+    ),
+    y = ""
+  ) +
+  guides(fill='none', color='none')
+make_post(
+  img = p,
+  title = "📖 = open book. 📕 = closed book. Why do you read the Book of Mormon daily?",
+  body = "Prophets have encouraged us to read the Book of Mormon: Another Testament of Jesus Christ. And since the  1980's have consistently invited us to read it daily.",
+  slug = slug,
+  name = 'plot_daily',
+  is_quote = F
+)
+p
+```
+
+The importance of this daily invitation returned in 2017 from President Monson:
+
+```{r}
+p <- instaquote(
+  title = "If you are not **reading the Book of Mormon each day**, please do so. If you will read it prayerfully and with a sincere desire to know the truth, the Holy Ghost will manifest its truth to you.",
+  subtitle = "President Thomas S. Monson, April 2017"
+)
+p
+```
+
+## Every Invitation to Read Daily
+
+Consider reading through this list of all invitations to read the Book of Mormon daily. 
+What promises do you see?
+
+```{r}
+dfg %>%
+  filter(str_detect(paragraph2, 'book of mormon')) %>%
+  filter(str_detect(paragraph2, 'immerse|feast|read|study|ponder')) %>%
+  filter(str_detect(paragraph2, 'every day|each day|daily')) %>%
+  mutate(yrmo = glue("{year}-{str_pad(month, 2, pad='0')}")) %>%
+  select(yrmo, pquote) %>%
+  datatable_quotes(n=100, 
+                   phrases=c('every day', 'day', 'daily'))
+```
+
+
+

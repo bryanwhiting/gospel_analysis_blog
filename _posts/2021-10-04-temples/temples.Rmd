@@ -1,0 +1,97 @@
+---
+title: "temples"
+description: |
+  A short description of the post.
+author:
+  - name: Bryan Whiting
+    url: https://www.bryanwhiting.com
+date: 2021-10-04
+draft: true
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+    toc_depth: 3
+categories:
+   - general conference
+   - scriptures
+   - jesus christ
+---
+
+
+```{r setup, include=FALSE}
+slug <- "temples" # basename(getwd())
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+```{r load}
+here::i_am(fs::path("_posts", slug, slug, ext = "Rmd"))
+pkgs <- c(
+  "generalconference", "scriptuRs", "instaquote",
+  "dplyr", "gt", "tidytext", "DT", "reactable", "htmltools", "here"
+)
+for (p in pkgs) library(p, character.only = T)
+source(here("R/ggtheme.R"), local = knitr::knit_global())
+source(here("R/utils.R"), local = knitr::knit_global())
+source(here("R/social_media.R"), local = knitr::knit_global())
+
+colors <- palette_pander(10)
+# extrafont::loadfonts() ## to load the font
+options(max.print = 1000)
+data("genconf")
+dfg <- genconf %>%
+  unnest(sessions) %>%
+  unnest(talks) %>%
+  unnest(paragraphs) %>%
+  mutate(
+    paragraph2 = tolower(paragraph),
+    date_str = date %>% format("%b %Y"),
+    deep_link = glue("{url}.{p_id}?lang=eng#{p_id}"),
+    p_href = glue('{author1} <a href="{deep_link}">{title1}</a>, {date_str}'),
+    pquote = glue("{paragraph}<br>{p_href}"),
+    # https://stackoverflow.com/a/26406796
+    n_words = str_count(paragraph2, "\\S+")
+  )
+
+dfs <- lds_scriptures() %>%
+  mutate(text2 = tolower(text))
+```
+
+```{r}
+# temples data
+df <- read_csv("https://churchofjesuschristtemples.org/maps/gps/")
+timelines_url <- "https://churchofjesuschristtemples.org/statistics/timelines/"
+timelines <- rvest::read_html(timelines_url) %>%
+  html_table()
+df1 <- timelines[[2]] %>% rename(duration_announce_to_ground = Duration)
+df2 <- timelines[[3]] %>% rename(duration_ground_to_dedication = Duration)
+df1 %>%
+  left_join(df2, by=c('Temple', 'Ground Broken')) %>%
+  janitor::clean_names() %>%
+  mutate(
+    announced = dmy(announced),
+    ground_broken = dmy(ground_broken),
+    dedicated = dmy(dedicated)
+  ) %>%
+  select(temple, announced, ground_broken, dedicated, everything()) %>%
+  View()
+
+#
+chronology <- rvest::read_html("https://churchofjesuschristtemples.org/temples/chronology/") %>%
+    html_table()
+
+# TODO: join chronology + lat/lon + annoucned/gb/etc. | all I'm missing
+# is the annoucnement for those that ahve already broken ground
+# perhaps reach out to the site author?
+# Join with https://churchofjesuschristtemples.org/temples/chronology/
+```
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
+

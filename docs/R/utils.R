@@ -45,7 +45,7 @@ quote_verse <- function(df, phrase = "xxxx") {
 }
 
 
-my_datatable <- function(df){
+my_datatable <- function(df, n=100, dom='t'){
   df %>%
     datatable(
       class = "compact hover",
@@ -56,20 +56,22 @@ my_datatable <- function(df){
         style = "caption-side: bottom; text-align: center;",
         withTags(div(HTML('Source: <a href="https://www.churchofjesuschrist.org">ChurchOfJesusChrist.org</a>')))
       ),
-      colnames = c("QUOTES (click + scroll to see more)"),
+      colnames = c("QUOTES (scroll to see more)"),
+      rownames=F,
       options = list(
         # dom = "ft",
-        dom = "t",
+        dom = dom,
         # deferRender = TRUE,
         pageLength = n,
         scrollY = 250,
         scrollX = FALSE,
         # scroller = TRUE,
-        columnDefts = list(
-          list(orderDAta = 0, targets = 1),
-          list(visible = FALSE, targets = 0),
-          list(className = "dt-head-left", targets = 1)
-        ),
+        # Sort by invisible column
+        # columnDefs = list(
+        #   list(orderData = 0, targets = 1),
+        #   list(visible = FALSE, targets = 0),
+        #   list(className = "dt-head-left", targets = 1)
+        # ),
         # font style: https://stackoverflow.com/a/53658138
         initComplete = JS(
           "function(settings, json) {",
@@ -77,7 +79,7 @@ my_datatable <- function(df){
           "}"
         )
       )
-    ) %>%
+    )  %>%
     # TODO: improve style
     # formatStyle(1, fontFamily="IBM Plex Sans")
     # formatStyle(1, fontFamily="Roboto Mono")
@@ -88,11 +90,10 @@ my_datatable <- function(df){
 }
 
 
-datatable_quotes <- function(df, n = 20, phrases="xxxx") {
+datatable_quotes <- function(df, n = 20, phrases="xxxx", dom='ft') {
 
   df <- df %>%
-    head(n) %>%
-    select(pquote)
+    head(n)
 
   # could have multiple phrases: hear Him, Hear Him, hear him
   for (p in phrases){
@@ -107,10 +108,16 @@ datatable_quotes <- function(df, n = 20, phrases="xxxx") {
     )
   }
   df %>%
-    my_datatable()
+    my_datatable(dom=dom)
 }
 
 # SEARCHING FUNCTIONS
+#'
+#' dfg %>%
+#'   filter(str_detect(paragraph2, 'read the book of mormon'),
+#'          str_detect(paragraph2, 'every day|each day|daily')) %>%
+#'   select(pquote) %>%
+#'   ask(pquote, terms=c(' da'))
 ask <- function(df_text, col, terms, output='dt', n = 200){
   # varname <- deparse(substitute(col))
 
