@@ -227,7 +227,15 @@ The importance of this daily invitation returned in 2017 from President Monson:
 ```{r}
 p <- instaquote(
   title = "If you are not **reading the Book of Mormon each day**, please do so. If you will read it prayerfully and with a sincere desire to know the truth, the Holy Ghost will manifest its truth to you.",
-  subtitle = "President Thomas S. Monson, April 2017"
+  subtitle = "President Thomas S. Monson, April 2017",
+  bg_color=colors[8]
+)
+make_post(
+  img = p,
+  title = "Every day, every day, every day",
+  slug=slug,
+  name='monson',
+  is_quote=T
 )
 p
 ```
