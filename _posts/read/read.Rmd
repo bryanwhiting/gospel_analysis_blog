@@ -233,6 +233,7 @@ p <- instaquote(
 make_post(
   img = p,
   title = "Every day, every day, every day",
+  body = "",
   slug=slug,
   name='monson',
   is_quote=T

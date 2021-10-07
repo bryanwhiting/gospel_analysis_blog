@@ -1,7 +1,9 @@
 source(here::here("R/social_media.R"))
 
 airtable_base <- "applRcAPoTh7RI9O4"
-root_img <- here::here("img")
+# have airtable look at docs/img folder for uploads - this is what
+# can get posted
+root_img <- here::here("docs/img")
 insta_hashtags <- "
 __________________________
 📷: www.gospelanalysis.com
